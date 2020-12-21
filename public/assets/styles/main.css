@@ -1,0 +1,177 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; }
+
+.start {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 10vh 65vh 25vh;
+  grid-template-columns: 20vw 55vw 25vw;
+  grid-template-areas: "title-left title-center title-right" "content-left content-center content-right" "downbar-left downbar-center downbar-right";
+  background-color: #222220;
+  color: white; }
+
+.start__title {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  grid-area: title-left; }
+
+.start__title__container {
+  font-size: 0.9rem;
+  margin-bottom: -3.2px;
+  margin-right: -0.75px;
+  z-index: 1; }
+
+.start__title__container__letter {
+  display: inline-block;
+  animation-name: bounce;
+  animation-duration: 1.5s;
+  animation-delay: 1s;
+  animation-iteration-count: 1; }
+
+.start__title__container__letter:nth-child(2) {
+  animation-delay: 1.1s; }
+
+.start__title__container__letter:nth-child(3) {
+  animation-delay: 1.2s; }
+
+.start__title__container__letter:nth-child(4) {
+  animation-delay: 1.3s; }
+
+.start__title__container__letter:nth-child(5) {
+  animation-delay: 1.4s; }
+
+.start__title__container__letter:nth-child(6) {
+  animation-delay: 1.5s; }
+
+.start__title__container__letter:nth-child(7) {
+  animation-delay: 1.6s; }
+
+.start__title__container__letter:nth-child(8) {
+  animation-delay: 1.7s; }
+
+.start__title__container__letter:nth-child(9) {
+  animation-delay: 1.8s; }
+
+.start__title__container__letter:nth-child(10) {
+  animation-delay: 1.9s; }
+
+.start__title__container__letter:nth-child(11) {
+  animation-delay: 2s; }
+
+.start__line {
+  display: block;
+  width: 2px;
+  height: 100%;
+  margin-left: auto;
+  background: linear-gradient(to bottom, #c89d9d 50%, white 50%);
+  background-position: bottom;
+  background-size: 100% 200%;
+  transition: background-position 1s ease-out, height 1s;
+  height: 0; }
+
+.start__line--content {
+  grid-area: content-left; }
+
+.start__line--content--active {
+  height: 100%; }
+
+.start__line--active {
+  background-position: top; }
+
+.start__content {
+  display: none;
+  grid-row-start: content-left;
+  grid-row-end: content-left;
+  grid-column-start: content-left;
+  grid-column-end: content-center; }
+
+.start__downbar {
+  grid-area: downbar-center; }
+
+.start__downbar {
+  margin-left: 20px; }
+
+.start__downbar__text {
+  display: inline;
+  position: relative;
+  opacity: 0;
+  transition: opacity 0.3s; }
+
+.start__downbar__text--visible {
+  opacity: 100%; }
+
+.start__downbar__text--title {
+  position: relative; }
+
+.start__downbar__text__line {
+  position: absolute;
+  top: 50%;
+  left: -22px;
+  width: 0px;
+  height: 2px;
+  background: linear-gradient(to right, #c89d9d 50%, white 50%);
+  background-position: right top;
+  background-size: 200% 100%;
+  transition: background-position 0.4s ease-out, width 0.4s; }
+
+.start__downbar__text__line--draw-active {
+  width: 24px; }
+
+.start__downbar__text__line--active {
+  background-position: bottom left; }
+
+.start__line--downbar {
+  grid-area: downbar-left;
+  height: 0;
+  z-index: 2;
+  transition: background-position 0.3s ease-out, height 0.3s; }
+
+.start__line--downbar--active {
+  height: 29.5px; }
+
+.start__downbar__text__overlay {
+  width: 22px;
+  display: inline;
+  position: absolute;
+  top: -0.1px;
+  bottom: 0;
+  left: 0;
+  color: #c89d9d;
+  overflow: hidden;
+  width: 0%;
+  transition: width 1s; }
+
+.start__downbar__text__overlay--active {
+  width: 100%; }
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0px); }
+  40% {
+    transform: translateY(-20px); }
+  80% {
+    transform: translateY(0px);
+    color: #c89d9d; }
+  100% {
+    transform: translateY(0px); } }
+
+@media (max-width: 1919px) {
+  .start__title__span {
+    font-size: 1.4rem;
+    margin-bottom: -6px;
+    margin-right: -1.75px;
+    z-index: 1; } }
+
+@media (max-width: 1365px) {
+  .start__title__span {
+    font-size: 1.2rem;
+    margin-bottom: -6px;
+    margin-right: -1.4px;
+    z-index: 1; } }
+
