@@ -10,6 +10,7 @@
     "downbar-left downbar-center downbar-right";
   background-color: rgb(34, 34, 32);
   color: white;
+  font-family: "Roboto Mono", monospace;
 }
 
 .start__title {
@@ -20,9 +21,10 @@
 }
 
 .start__title__container {
+  display: flex;
   font-size: 0.9rem;
   margin-bottom: -3.2px;
-  margin-right: -0.75px;
+  margin-right: -3px;
   z-index: 1;
 }
 
@@ -90,11 +92,53 @@
 }
 
 .start__content {
-  display: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 30px;
+  margin-top: 30px;
+  font-size: 2rem;
   grid-row-start: content-left;
   grid-row-end: content-left;
   grid-column-start: content-left;
   grid-column-end: content-center;
+}
+
+.start__content__p {
+  transform: translate(20px, 10px);
+  transition: transform 0.15s, opacity 0.1s;
+  opacity: 0;
+}
+
+.start__content__p:nth-child(2) {
+  color: #adaea5;
+}
+
+.start__content__p:nth-child(3) {
+  color: #8a8b84;
+}
+
+.start__content_p--move-up {
+  transform: translate(20px, 0);
+  opacity: 1;
+}
+
+.start__content_p--mov-left {
+  transform: translate(0, 0);
+}
+
+.start__icon {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  color: #2a2a27;
+  grid-area: content-right;
+  font-size: 6rem;
+  transform: translateX(-30px);
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 
 .start__downbar {
@@ -105,11 +149,35 @@
   margin-left: 20px;
 }
 
+.start__downbar__container {
+  display: inline-block;
+  transform: translate(0, 0);
+  transition: transform 1s, font-size 1s, opacity 0.15s;
+}
+
+.start__downbar__container--title {
+  margin-right: 100%;
+}
+
+.start__downbar__container--move {
+  transform: translate(0, -35vh) scale(3);
+  transform-origin: 0 0;
+}
+
+.start__downbar__container--move-away {
+  transform: translate(-100vw, -150vh) scale(1);
+  transition: transform 2s;
+}
+
+.start__downbar__container--title--invisible {
+  opacity: 0;
+}
+
 .start__downbar__text {
   display: inline;
   position: relative;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s, transform 0.6s, font-size 0.3;
 }
 
 .start__downbar__text--visible {
@@ -148,7 +216,7 @@
 }
 
 .start__line--downbar--active {
-  height: 29.5px;
+  height: 33px;
 }
 
 .start__downbar__text__overlay {
@@ -162,6 +230,11 @@
   overflow: hidden;
   width: 0%;
   transition: width 1s;
+}
+
+.start__downbar__text__overlay--author {
+  display: flex;
+  margin-right: 10px;
 }
 
 .start__downbar__text__overlay--active {

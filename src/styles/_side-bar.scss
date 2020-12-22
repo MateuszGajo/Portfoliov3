@@ -1,0 +1,31 @@
+.side-bar {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 50%;
+  right: 10px;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.side-bar__icon {
+  color: rgb(200, 157, 157);
+  font-size: 12px;
+  cursor: pointer;
+  transition: transform 0.75s;
+  transform: scale(1.5);
+  opacity: 0;
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.side-bar__icon + .side-bar__icon {
+  margin-top: 15px;
+}
+
+.side-bar__icon--intitial {
+  transform: scale(1);
+  opacity: 1;
+  transition: transform 0.2s;
+}
