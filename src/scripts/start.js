@@ -1,114 +1,108 @@
-setTimeout(() => {
-  document
-    .querySelector(".start__line--content")
-    .classList.add("start__line--content--active");
-}, 2400);
+const setAnimation = (el, type, className, time = 0) => {
+  switch (type) {
+    case "add": {
+      setTimeout(() => {
+        el.classList.add(className);
+      }, time);
+      break;
+    }
+    case "remove": {
+      setTimeout(() => {
+        el.classList.remove(className);
+      }, time);
+      break;
+    }
+  }
+};
 
-setTimeout(() => {
-  document
-    .querySelector(".start__line--content")
-    .classList.add("start__line--active");
-}, 3000);
+const contentLineEl = document.querySelector(".start__line--content");
+const downbarLineEl = document.querySelector(".start__line--downbar");
+const downbarTitleLineEl = document.querySelector(
+  ".start__downbar__text__line--title"
+);
+const downbarTitleEl = document.querySelector(".start__downbar__text--title");
+const downbarAuthorLineEl = document.querySelector(
+  ".start__downbar__text__line--author"
+);
+const downbarAuthorEl = document.querySelector(".start__downbar__text--author");
+const downbarTitleOverlayEl = document.querySelector(
+  ".start__downbar__text__overlay--title"
+);
+const downbarAuthorOverlayEl = document.querySelector(
+  ".start__downbar__text__overlay--author"
+);
+const downbarEls = document.querySelectorAll(".start__downbar__container");
+const downbarTitleContainerEl = document.querySelector(
+  ".start__downbar__container--title"
+);
 
-setTimeout(() => {
-  document
-    .querySelector(".start__line--downbar")
-    .classList.add("start__line--downbar--active");
-}, 3400);
-
-setTimeout(() => {
-  document
-    .querySelector(".start__downbar__text__line--title")
-    .classList.add("start__downbar__text__line--draw-active");
-}, 3500);
-
-setTimeout(() => {
-  document
-    .querySelector(".start__downbar__text--title")
-    .classList.add("start__downbar__text--visible");
-}, 3600);
-
-setTimeout(() => {
-  document
-    .querySelector(".start__downbar__text__line--author")
-    .classList.add("start__downbar__text__line--draw-active");
-}, 3700);
-
-setTimeout(() => {
-  document
-    .querySelector(".start__downbar__text--author")
-    .classList.add("start__downbar__text--visible");
-}, 3800);
-
-setTimeout(() => {
-  document
-    .querySelector(".start__line--downbar")
-    .classList.add("start__line--active");
-}, 4000);
-
-setTimeout(() => {
-  document
-    .querySelector(".start__downbar__text__line--title")
-    .classList.add("start__downbar__text__line--active");
-}, 4100);
-
-setTimeout(() => {
-  document
-    .querySelector(".start__downbar__text__line--author")
-    .classList.add("start__downbar__text__line--active");
-}, 4300);
-
-setTimeout(() => {
-  document
-    .querySelector(".start__downbar__text__overlay--title")
-    .classList.add("start__downbar__text__overlay--active");
-}, 4500);
-
-setTimeout(() => {
-  document
-    .querySelector(".start__downbar__text__overlay--author")
-    .classList.add("start__downbar__text__overlay--active");
-}, 4700);
-
-setTimeout(() => {
-  document
-    .querySelector(".start__downbar__text__line--author")
-    .classList.remove("start__downbar__text__line--draw-active");
-}, 5800);
-
-setTimeout(() => {
-  document
-    .querySelector(".start__downbar__text__line--title")
-    .classList.remove("start__downbar__text__line--draw-active");
-}, 5900);
-
-setTimeout(() => {
-  document
-    .querySelector(".start__line--downbar")
-    .classList.remove("start__line--downbar--active");
-}, 6000);
-
-setTimeout(() => {
-  document
-    .querySelector(".start__line--content")
-    .classList.remove("start__line--content--active");
-}, 6300);
-
-setTimeout(() => {
-  document.querySelectorAll(".start__downbar__container").forEach((item) => {
-    item.classList.add("start__downbar__container--move");
-  });
-  document
-    .querySelector(".start__downbar__container--title")
-    .classList.add("start__downbar__container--title--invisible");
-
-  document
-    .querySelector(".start__downbar__text--author")
-    .classList.add("visibility-hidden");
-  document
-    .querySelector(".start__downbar__text__overlay--author")
-    .classList.add("visibility-visble");
-}, 7000);
+setAnimation(contentLineEl, "add", "start__line--content--active", 2400);
+setAnimation(contentLineEl, "add", `start__line--active`, 3000);
+setAnimation(downbarLineEl, "add", "start__line--downbar--active", 3400);
+setAnimation(
+  downbarTitleLineEl,
+  "add",
+  "start__downbar__text__line--draw-active",
+  3500
+);
+setAnimation(downbarTitleEl, "add", "start__downbar__text--visible", 3600);
+setAnimation(
+  downbarAuthorLineEl,
+  "add",
+  "start__downbar__text__line--draw-active",
+  3700
+);
+setAnimation(downbarAuthorEl, "add", "start__downbar__text--visible", 3800);
+setAnimation(downbarLineEl, "add", "start__line--active", 4000);
+setAnimation(
+  downbarTitleLineEl,
+  "add",
+  "start__downbar__text__line--active",
+  4100
+);
+setAnimation(
+  downbarAuthorLineEl,
+  "add",
+  "start__downbar__text__line--active",
+  4300
+);
+setAnimation(
+  downbarTitleOverlayEl,
+  "add",
+  "start__downbar__text__overlay--active",
+  4500
+);
+setAnimation(
+  downbarAuthorOverlayEl,
+  "add",
+  "start__downbar__text__overlay--active",
+  4700
+);
+setAnimation(
+  downbarAuthorLineEl,
+  "remove",
+  "start__downbar__text__line--draw-active",
+  5800
+);
+setAnimation(
+  downbarTitleLineEl,
+  "remove",
+  "start__downbar__text__line--draw-active",
+  5900
+);
+setAnimation(downbarLineEl, "remove", "start__line--downbar--active", 6000);
+setAnimation(contentLineEl, "remove", "start__line--content--active", 6300);
+downbarEls.forEach((item) => {
+  setAnimation(item, "add", "start__downbar__container--move", 7000);
+});
+setAnimation(downbarAuthorEl, "add", "visibility-hidden", 7000);
+setAnimation(downbarAuthorOverlayEl, "add", "visibility-visble", 7000);
+setAnimation(
+  downbarTitleContainerEl,
+  "add",
+  "start__downbar__container--title--invisible",
+  7000
+);
 
 setTimeout(() => {
   document
@@ -121,10 +115,9 @@ setTimeout(() => {
 const shuffleText = (el, time) => {
   const initialLetter = el.textContent;
   const interval = setInterval(
-    (function foo() {
-      // console.log("here");
+    (function shuffle() {
       el.textContent = String.fromCharCode(33 + Math.round(Math.random() * 99));
-      return foo;
+      return shuffle;
     })(),
     10
   );
@@ -137,7 +130,6 @@ const shuffleText = (el, time) => {
         .querySelector(".start__downbar__container--author")
         .classList.add("start__downbar__container--move-away");
       const children = document.querySelectorAll(".start__content__p");
-      console.log(children[1]);
       for (let i = 0; i < children.length; i++) {
         setTimeout(() => {
           children[i].classList.add("start__content_p--move-up");
@@ -149,8 +141,6 @@ const shuffleText = (el, time) => {
         setTimeout(() => {
           el.classList.add("start__content_p--mov-left");
         }, 100);
-        console.log(index);
-        console.log(index === 2);
         if (index === 2) {
           setTimeout(() => {
             document
