@@ -1,1 +1,2 @@
+import "./scroll";
 import "./start";

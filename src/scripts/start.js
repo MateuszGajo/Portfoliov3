@@ -36,7 +36,7 @@ const downbarTitleContainerEl = document.querySelector(
   ".start__downbar__container--title"
 );
 
-setAnimation(contentLineEl, "add", "start__line--content--active", 2400);
+setAnimation(contentLineEl, "add", "height-max", 2400);
 setAnimation(contentLineEl, "add", `start__line--active`, 3000);
 setAnimation(downbarLineEl, "add", "start__line--downbar--active", 3400);
 setAnimation(
@@ -45,14 +45,14 @@ setAnimation(
   "start__downbar__text__line--draw-active",
   3500
 );
-setAnimation(downbarTitleEl, "add", "start__downbar__text--visible", 3600);
+setAnimation(downbarTitleEl, "add", "opacity-visible", 3600);
 setAnimation(
   downbarAuthorLineEl,
   "add",
   "start__downbar__text__line--draw-active",
   3700
 );
-setAnimation(downbarAuthorEl, "add", "start__downbar__text--visible", 3800);
+setAnimation(downbarAuthorEl, "add", "opacity-visible", 3800);
 setAnimation(downbarLineEl, "add", "start__line--active", 4000);
 setAnimation(
   downbarTitleLineEl,
@@ -66,18 +66,8 @@ setAnimation(
   "start__downbar__text__line--active",
   4300
 );
-setAnimation(
-  downbarTitleOverlayEl,
-  "add",
-  "start__downbar__text__overlay--active",
-  4500
-);
-setAnimation(
-  downbarAuthorOverlayEl,
-  "add",
-  "start__downbar__text__overlay--active",
-  4700
-);
+setAnimation(downbarTitleOverlayEl, "add", "width-max", 4500);
+setAnimation(downbarAuthorOverlayEl, "add", "width-max", 4700);
 setAnimation(
   downbarAuthorLineEl,
   "remove",
@@ -91,7 +81,7 @@ setAnimation(
   5900
 );
 setAnimation(downbarLineEl, "remove", "start__line--downbar--active", 6000);
-setAnimation(contentLineEl, "remove", "start__line--content--active", 6300);
+setAnimation(contentLineEl, "remove", "height-max", 6300);
 downbarEls.forEach((item) => {
   setAnimation(item, "add", "start__downbar__container--move", 7000);
 });

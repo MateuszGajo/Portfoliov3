@@ -1,9 +1,9 @@
 .start {
-  width: 100vw;
+  // width: 100vw;
   height: 100vh;
   display: grid;
-  grid-template-rows: 10vh 65vh 25vh;
-  grid-template-columns: 20vw 55vw 25vw;
+  grid-template-rows: 10vh 1fr 25vh;
+  grid-template-columns: 20vw 1fr 25vw;
   grid-template-areas:
     "title-left title-center title-right"
     "content-left content-center content-right"
@@ -83,10 +83,6 @@
   grid-area: content-left;
 }
 
-.start__line--content--active {
-  height: 100%;
-}
-
 .start__line--active {
   background-position: top;
 }
@@ -163,7 +159,7 @@
 }
 
 .start__downbar__container--title {
-  margin-right: 100%;
+  margin-right: 50%;
 }
 
 .start__downbar__container--move {
@@ -182,13 +178,10 @@
 
 .start__downbar__text {
   display: inline;
+  display: block;
   position: relative;
   opacity: 0;
   transition: opacity 0.3s, transform 0.6s, font-size 0.3;
-}
-
-.start__downbar__text--visible {
-  opacity: 100%;
 }
 
 .start__downbar__text--title {
@@ -240,10 +233,6 @@
 .start__downbar__text__overlay--author {
   display: flex;
   margin-right: 10px;
-}
-
-.start__downbar__text__overlay--active {
-  width: 100%;
 }
 
 @keyframes bounce {
@@ -346,15 +335,15 @@
     font-size: 10rem;
   }
 
-  .start__downbar__container--title {
-    margin-right: 99%;
-  }
+  // .start__downbar__container--title {
+  //   margin-right: 99%;
+  // }
 }
 
 @media (max-width: 1023px) and (orientation: portrait) {
   .start {
-    grid-template-rows: 10vh 65vh 25vh;
-    grid-template-columns: 30vw 55vw 15vw;
+    grid-template-rows: 10vh 1fr 25vh;
+    grid-template-columns: 30vw 1fr 15vw;
   }
 
   .start__title__container {
@@ -405,8 +394,8 @@
 
 @media (max-width: 1023px) and (orientation: landscape) {
   .start {
-    grid-template-rows: 10vh 60vh 30vh;
-    grid-template-columns: 20vw 55vw 25vw;
+    grid-template-rows: 10vh 1fr 30vh;
+    grid-template-columns: 20vw 1fr 25vw;
   }
 
   .start__title__container {
@@ -428,7 +417,7 @@
   }
 
   .start__line--downbar--active {
-    height: 48px;
+    height: 47px;
   }
 
   .start__content__p {

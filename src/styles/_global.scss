@@ -17,3 +17,16 @@
 .opacity-visible {
   opacity: 1;
 }
+
+.height-max {
+  height: 100%;
+}
+
+.width-max {
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
