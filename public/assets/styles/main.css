@@ -370,6 +370,76 @@ a {
 .about {
   height: 100vh; }
 
+.flower__flowerpot {
+  position: relative;
+  width: 400px;
+  height: 260px;
+  background-color: brown; }
+
+.flower__flowerpot__outside-triangle {
+  position: absolute;
+  bottom: 0; }
+
+.flower__flowerpot__outside-triangle--left {
+  left: 0;
+  width: 0;
+  height: 0;
+  border-top: 130px solid transparent;
+  border-right: 260px solid white;
+  transform-origin: bottom left;
+  transform: rotate(90deg) translateX(-260px); }
+
+.flower__flowerpot__outside-triangle--right {
+  right: 0;
+  width: 0;
+  height: 0;
+  border-top: 260px solid white;
+  border-right: 130px solid transparent;
+  transform: rotate(180deg); }
+
+.flower_flowerpot__octagon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 220px;
+  height: 260px;
+  background-color: black;
+  transform: translateX(-50%); }
+
+.flower_flowerpot__octagon__triangle {
+  position: absolute; }
+
+.flower_flowerpot__octagon__triangle--bottom-left {
+  left: 0;
+  bottom: 0;
+  border-top: 60px solid transparent;
+  border-right: 80px solid white;
+  transform-origin: bottom left;
+  transform: rotate(90deg) translate(-80px); }
+
+.flower_flowerpot__octagon__triangle--top-left {
+  left: 0;
+  top: 0;
+  border-top: 80px solid brown;
+  border-right: 60px solid transparent;
+  transform: rotate(0deg); }
+
+.flower_flowerpot__octagon__triangle--bottom-right {
+  right: 0;
+  bottom: 0;
+  border-top: 80px solid white;
+  border-right: 60px solid transparent;
+  transform: rotate(180deg); }
+
+.flower_flowerpot__octagon__triangle--top-right {
+  right: 0;
+  top: 0;
+  border-top: 60px solid brown;
+  border-right: 80px solid transparent;
+  transform-origin: top left;
+  transform: rotate(90deg) translateY(-80px); }
+
 .opacity {
   opacity: 100%; }
 

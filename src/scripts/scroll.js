@@ -1,6 +1,6 @@
-setTimeout(function () {
-  window.scrollTo(0, 0);
-}, 30);
+// setTimeout(function () {
+//   window.scrollTo(0, 0);
+// }, 30);
 
 scrollModule = (() => {
   let state = {
