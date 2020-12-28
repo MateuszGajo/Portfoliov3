@@ -1,6 +1,6 @@
-setTimeout(function () {
-  window.scrollTo(0, 0);
-}, 30);
+// setTimeout(function () {
+//   window.scrollTo(0, 0);
+// }, 30);
 
 scrollModule = (() => {
   let state = {
@@ -37,7 +37,6 @@ const scrollUp = () => {
 };
 
 const checkScrollDirection = (e) => {
-  console.log(window.scrollY);
   if (e.wheelDelta > 0) {
     scrollUp();
   } else {
