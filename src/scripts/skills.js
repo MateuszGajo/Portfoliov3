@@ -2,6 +2,7 @@ const skillsDescriptionTitleEl = document.querySelector(
   ".skills__description__title"
 );
 const windowHeight = window.innerHeight;
+const windowWidth = window.innerWidth;
 const skillsSection = document.querySelector(".skills");
 const SkillsDescriptionTextEl = document.querySelector(
   ".skills__description__text"
@@ -15,8 +16,9 @@ const skillsItems = document.querySelectorAll(
   ".skills__technologies__wrapper__container"
 );
 const itemPoint = document.querySelector(
-  ".skills__technologies__wrapper__container__point"
+  ".skills__technologies__wrapper__container__point__circle--big"
 );
+const marginEl = document.querySelector(".skills__technologies__margin");
 
 const skillsStartPosition = skillsSection.getBoundingClientRect().y;
 const endOfSkillsSection = skillsStartPosition + windowHeight;
@@ -24,11 +26,87 @@ const endOfSkillsSection = skillsStartPosition + windowHeight;
 const skillsDescriptionPosition = skillsDescriptionTitleEl.getBoundingClientRect()
   .y;
 
-skillsDescriptionTitleEl.style.color = "red";
+const skillsItemsSorted = [].map
+  .call(skillsItems, function (el) {
+    return el;
+  })
+  .sort((a, b) => {
+    return a.offsetTop - b.offsetTop;
+  });
 
-skillsDescriptionTitleEl.style.transform = `translate(calc(30vw - 220px), ${
-  endOfSkillsSection - skillsDescriptionPosition - 141
-}px) scale(3)`;
+skillsDescriptionTitleEl.style.color = "red";
+const descriptionTitleWidth = skillsDescriptionTitleEl.offsetWidth;
+const descriptionTitleHeight = skillsDescriptionTitleEl.offsetHeight;
+const descriptionTitleFromLeft = skillsDescriptionTitleEl.offsetLeft;
+console.log(descriptionTitleFromLeft);
+if (windowWidth < 450) {
+  const multipler = 1.5;
+  const x = `calc(50vw - ${
+    (descriptionTitleWidth * multipler) / 2
+  }px - ${descriptionTitleFromLeft}px)`;
+
+  const y = `
+    ${
+      endOfSkillsSection -
+      skillsDescriptionPosition -
+      descriptionTitleHeight * multipler
+    }px`;
+
+  skillsDescriptionTitleEl.style.transform = `translate(${x}, ${y}) scale(${multipler})`;
+} else if (windowWidth < 550) {
+  const multipler = 2;
+  const x = `calc(50vw - ${
+    (descriptionTitleWidth * multipler) / 2
+  }px - ${descriptionTitleFromLeft}px)`;
+
+  const y = `
+    ${
+      endOfSkillsSection -
+      skillsDescriptionPosition -
+      descriptionTitleHeight * multipler
+    }px`;
+
+  skillsDescriptionTitleEl.style.transform = `translate(${x}, ${y}) scale(${multipler})`;
+} else {
+  const multipler = 3;
+  const x = `calc(50vw - ${
+    (descriptionTitleWidth * multipler) / 2
+  }px - ${descriptionTitleFromLeft}px)`;
+
+  const y = `
+    ${
+      endOfSkillsSection -
+      skillsDescriptionPosition -
+      descriptionTitleHeight * multipler
+    }px`;
+
+  skillsDescriptionTitleEl.style.transform = `translate(${x}, ${y}) scale(${multipler})`;
+}
+
+const skillsModule = (() => {
+  let state = {
+    isSectionStart: false,
+    i: 0,
+    last: skillsItemsSorted.length,
+    animation: {
+      index: null,
+      date: null,
+    },
+    autoScrollTimeout: null,
+    autoScroll: null,
+    isUserScroll: false,
+  };
+  const pub = {};
+
+  pub.changeState = (newState) => {
+    state = newState;
+  };
+  pub.getState = () => {
+    return state;
+  };
+
+  return pub;
+})();
 
 const setAnimation = (el, type, className, time = 0, styles) => {
   switch (type) {
@@ -50,32 +128,45 @@ const setAnimation = (el, type, className, time = 0, styles) => {
   }
 };
 
+let autoScroll;
+
 const startSection = () => {
-  setAnimation(skillsDescriptionTitleEl, "add", "opacity-visible", 200);
-  setAnimation(skillsDescriptionTitleEl, "style", "", 600, {
-    key: "transform",
-    value: "translate(0,0) scale(1)",
-  });
-  setAnimation(
-    SkillsDescriptionTextEl,
-    "add",
-    "skills__description__text--active",
-    1800
-  );
-
-  setAnimation(
-    SkillsDescriptionTextEl,
-    "add",
-    "skills__description__text--active",
-    1800
-  );
-
-  setAnimation(
-    techonologiesLine,
-    "add",
-    "skills__technologies__line--active",
-    2100
-  );
+  // setAnimation(skillsDescriptionTitleEl, "add", "opacity-visible", 200);
+  // setAnimation(skillsDescriptionTitleEl, "style", "", 600, {
+  //   key: "transform",
+  //   value: "translate(0,0) scale(1)",
+  // });
+  // setAnimation(
+  //   SkillsDescriptionTextEl,
+  //   "add",
+  //   "skills__description__text--active",
+  //   1800
+  // );
+  // setAnimation(
+  //   SkillsDescriptionTextEl,
+  //   "add",
+  //   "skills__description__text--active",
+  //   1800
+  // );
+  // setAnimation(
+  //   skillsItemsSorted[0],
+  //   "add",
+  //   "skills__technologies__wrapper__container--active",
+  //   2100
+  // );
+  // setAnimation(
+  //   techonologiesLine,
+  //   "add",
+  //   "skills__technologies__line--active",
+  //   3000
+  // );
+  // setTimeout(() => {
+  //   autoScroll = setInterval(() => {
+  //     technologiesEl.scrollBy({
+  //       top: 6,
+  //     });
+  //   }, 60);
+  // }, 2500);
 };
 setAnimation(technologiesLineOverlay, "style", "", 3100, {
   key: "height",
@@ -83,33 +174,18 @@ setAnimation(technologiesLineOverlay, "style", "", 3100, {
 });
 startSection();
 
-let isSectionStart = false;
+technologiesEl.addEventListener("wheel", (e) => {
+  techonologiesLine.classList.add("skills__technologies__line--tranistion");
+  skillsModule.changeState({ ...skillsModule.getState(), isUserScroll: true });
+  isUserScroll = true;
+});
 
-const skillsItemsSorted = [].map
-  .call(skillsItems, function (el) {
-    return el;
-  })
-  .sort((a, b) => {
-    return a.offsetTop - b.offsetTop;
-  });
-
-let i = 0;
-const last = skillsItemsSorted.length;
-let animation = {
-  index: null,
-  date: null,
-};
-technologiesEl.addEventListener("scroll", (e) => {
-  console.log(i);
-  const scrollCenter = windowHeight / 2 + e.target.scrollTop;
-  const lineScroll = windowHeight / 1.5 + e.target.scrollTop;
-  const elementCenter =
-    skillsItemsSorted[i].offsetTop + skillsItemsSorted[i].offsetHeight / 2;
-  const lastElementPosition =
-    skillsItemsSorted[last - 1].offsetTop +
-    skillsItemsSorted[last - 1].offsetHeight / 2;
-  const itemPointHeight = itemPoint.offsetHeight;
-
+const clearAsyncFun = ({
+  animation,
+  isUserScroll,
+  autoScrollTimeout,
+  autoScroll,
+}) => {
   if (
     animation.index &&
     new Date().getTime() - animation.date.getTime() < 300
@@ -117,62 +193,135 @@ technologiesEl.addEventListener("scroll", (e) => {
     clearTimeout(animation.index);
   }
 
+  if (isUserScroll) {
+    console.log("Clear");
+    console.log(autoScroll);
+    console.log(autoScrollTimeout);
+    clearInterval(autoScroll);
+    clearTimeout(autoScrollTimeout);
+  }
+};
+
+const scrollSection = ({
+  scrollCenter,
+  lastElementPosition,
+  i,
+  last,
+  autoScrollTimeout,
+  e,
+}) => {
+  const lineScroll = windowHeight / 1.2 + e.target.scrollTop;
+  const elementCenter =
+    skillsItemsSorted[i].offsetTop + skillsItemsSorted[i].offsetHeight / 2;
+  const itemPointHeight = itemPoint.offsetHeight;
+  const triggerPoint = elementCenter - itemPointHeight / 2 - windowHeight / 3;
+  const newScrollPosition =
+    scrollCenter - skillsItemsSorted[i].offsetHeight / 2 + windowHeight / 3;
   if (lineScroll > lastElementPosition) {
-    if (scrollCenter > lastElementPosition) {
-      technologiesLineOverlay.style.height = lastElementPosition - 30 + "px";
+    if (newScrollPosition > lastElementPosition) {
+      technologiesLineOverlay.style.height = lastElementPosition + "px";
       setAnimation(
         skillsItemsSorted[i],
         "add",
         "skills__technologies__wrapper__container--active",
         0
       );
-    } else technologiesLineOverlay.style.height = scrollCenter - 30 + "px";
-    techonologiesLine.style.height = lastElementPosition - 30 + "px";
-  } else if (scrollCenter > elementCenter - itemPointHeight / 2) {
-    technologiesLineOverlay.style.height =
-      elementCenter - itemPointHeight / 2 + "px";
-
-    setAnimation(
-      skillsItemsSorted[i],
-      "add",
-      "skills__technologies__wrapper__container--active",
-      1000
+      clearInterval(autoScroll);
+      clearTimeout(autoScrollTimeout);
+    } else technologiesLineOverlay.style.height = newScrollPosition + "px";
+    techonologiesLine.style.height = lastElementPosition + "px";
+  } else if (scrollCenter > triggerPoint) {
+    technologiesLineOverlay.style.height = triggerPoint + windowHeight / 3;
+    +"px";
+    skillsItemsSorted[i].classList.add(
+      "skills__technologies__wrapper__container--active"
     );
 
-    animation.index = setAnimation(technologiesLineOverlay, "style", "", 300, {
+    const index = setAnimation(technologiesLineOverlay, "style", "", 300, {
       key: "height",
-      value: scrollCenter + "px",
+      value: newScrollPosition + "px",
     });
-    animation.date = new Date();
-
-    if (i < last - 1) i++;
+    const date = new Date();
+    skillsModule.changeState({
+      ...skillsModule.getState(),
+      animation: { index, date },
+    });
+    if (i < last - 1)
+      skillsModule.changeState({ ...skillsModule.getState(), i: i + 1 });
   } else {
-    technologiesLineOverlay.style.height = scrollCenter - 30 + "px";
+    technologiesLineOverlay.style.height = newScrollPosition + "px";
     techonologiesLine.style.height = lineScroll + "px";
   }
+};
 
+const hidenLastElement = ({ i, scrollCenter }) => {
   if (i > 0) {
     const previousElementCenter =
       skillsItemsSorted[i - 1].offsetTop +
       skillsItemsSorted[i - 1].offsetHeight / 2;
 
-    if (scrollCenter > previousElementCenter + windowHeight / 2.45) {
+    if (scrollCenter > previousElementCenter + windowHeight / 2.75) {
       skillsItemsSorted[i - 1].classList.add(
         "skills__technologies__wrapper__container--deactive"
       );
     }
   }
+};
 
-  if (
-    lineScroll > windowHeight &&
-    lineScroll < e.target.scrollHeight + windowHeight * 2
-  ) {
+const addInterval = ({ isUserScroll, scrollCenter, lastElementPosition }) => {
+  if (isUserScroll && scrollCenter < lastElementPosition) {
+    const autoScrollTimeout = setTimeout(() => {
+      techonologiesLine.classList.remove(
+        "skills__technologies__line--tranistion"
+      );
+      const autoScroll = setInterval(() => {
+        technologiesEl.scrollBy({
+          top: 10,
+          behavior: "smooth",
+        });
+      }, 80);
+      skillsModule.changeState({ ...skillsModule.getState(), autoScroll });
+    }, 1200);
+    skillsModule.changeState({ ...skillsModule.getState(), autoScrollTimeout });
   }
+  skillsModule.changeState({ ...skillsModule.getState(), isUserScroll: false });
+};
+
+technologiesEl.addEventListener("scroll", (e) => {
+  const {
+    i,
+    animation,
+    isUserScroll,
+    last,
+    autoScrollTimeout,
+    autoScroll,
+  } = skillsModule.getState();
+
+  const scrollCenter = windowHeight / 2 + e.target.scrollTop;
+  const lastElementPosition = skillsItemsSorted[last - 1].offsetTop;
+
+  clearAsyncFun({ animation, isUserScroll, autoScrollTimeout, autoScroll });
+
+  scrollSection({
+    scrollCenter,
+    lastElementPosition,
+    i,
+    last,
+    autoScrollTimeout,
+    e,
+  });
+
+  hidenLastElement({ i, scrollCenter });
+
+  addInterval({ isUserScroll, scrollCenter, lastElementPosition });
 });
 
 document.addEventListener("scroll", (e) => {
   if (window.pageYOffset === skillsStartPosition && !isSectionStart) {
     startSection();
-    isSectionStart = true;
+    skillsModule.changeState({
+      ...skillsModule.getState(),
+      isSectionStart: true,
+    });
   }
 });

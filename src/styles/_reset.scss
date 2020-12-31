@@ -13,3 +13,18 @@ body {
 a {
   color: inherit;
 }
+
+.no-scroll::-webkit-scrollbar {
+  width: 0px;
+  pointer-events: none !important;
+}
+
+.no-scroll::-webkit-scrollbar-thumb {
+  background-color: none;
+}
+
+@-moz-document url-prefix() {
+  .no-scroll {
+    scrollbar-width: none;
+  }
+}
