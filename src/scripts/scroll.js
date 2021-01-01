@@ -1,24 +1,9 @@
-// setTimeout(function () {
-//   window.scrollTo(0, 0);
-// }, 30);
+setTimeout(function () {
+  window.scrollTo(0, 0);
+}, 40);
 
-scrollModule = (() => {
-  let state = {
-    scrollPosition: 0,
-    windowHeight: window.innerHeight,
-  };
-
-  const pub = {};
-  pub.changeState = (newState) => {
-    state = newState;
-  };
-
-  pub.getState = () => {
-    return state;
-  };
-
-  return pub;
-})();
+import { globalState } from "./globalState";
+console.log(globalState);
 
 const windowHeight = window.innerHeight;
 
@@ -37,10 +22,13 @@ const scrollUp = () => {
 };
 
 const checkScrollDirection = (e) => {
-  if (e.wheelDelta > 0) {
-    scrollUp();
-  } else {
-    scrollDown();
+  const { allowScroll } = globalState.getState();
+  if (allowScroll) {
+    if (e.wheelDelta > 0) {
+      scrollUp();
+    } else {
+      scrollDown();
+    }
   }
 };
 

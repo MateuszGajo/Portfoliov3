@@ -1,4 +1,5 @@
 .skills {
+  position: relative;
   display: flex;
   height: 100vh;
   background-color: #1f1f1d;
@@ -11,17 +12,20 @@
   align-items: center;
   width: 40%;
   margin-left: 10px;
+  overflow: hidden;
 }
 
 .skills__description__title {
-  margin-bottom: 15px;
-  transform-origin: 0 0;
-  transition: transform 1.2s, opacity 0.4s;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -70.5px) scale(3);
   opacity: 0;
+  z-index: 2;
 }
 
-.skills__description__title--active {
-  transform: translate(0, 0) scale(1);
+.skills__description__title.opacity-visible {
+  transition: transform 1.2s, opacity 0.4s, left 1.2s, bottom 1.2s;
 }
 
 .skills__description__title__h2 {
@@ -32,6 +36,7 @@
   opacity: 0;
   transform: translateX(30px);
   transition: opacity 0.3s, transform 0.3s;
+  text-align: center;
 }
 
 .skills__description__text--active {
@@ -78,7 +83,7 @@
   background: linear-gradient(to bottom, white, white 50%, white 100%);
   height: 0;
   width: 100%;
-  margin-top: calc(207px / 2 - 15px);
+  margin-top: calc(207px / 2);
 }
 
 .skills__technologies__line--tranistion {
@@ -375,7 +380,7 @@
   }
 
   .skills__technologies__line {
-    margin-top: calc(137px / 2 - 15px);
+    margin-top: calc(137px / 2);
   }
 
   .skills__technologies__wrapper--right
@@ -433,7 +438,7 @@
   }
 
   .skills__technologies__line {
-    margin-top: calc(104px / 2 -15px);
+    margin-top: calc(104px / 2);
   }
 
   .skills__technologies__wrapper--right
@@ -470,7 +475,11 @@
   .skills__description {
     height: 100vh;
     width: 100vw;
-    margin-left: 0;
+    margin-right: 10px;
+  }
+
+  .skills__description__text {
+    width: 95%;
   }
 
   .skills__technologies {
