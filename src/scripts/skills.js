@@ -24,7 +24,7 @@ window.addEventListener("DOMContentLoaded", () => {
   );
   const marginEl = document.querySelector(".skills__technologies__margin");
 
-  const technologiesStart = technologiesEl.offsetTop;
+  const technologiesStart = skillsSection.offsetTop + technologiesEl.offsetTop;
 
   const skillsItemsSorted = [].map
     .call(skillsItems, function (el) {
@@ -46,6 +46,8 @@ window.addEventListener("DOMContentLoaded", () => {
       autoScrollTimeout: null,
       autoScroll: null,
       isUserScroll: false,
+      animationStarted: false,
+      animationEnded: false,
     };
     const pub = {};
 
@@ -82,7 +84,58 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  let autoScroll;
+  const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
+
+  function preventDefault(e) {
+    e.preventDefault();
+  }
+
+  function preventDefaultForScrollKeys(e) {
+    if (keys[e.keyCode]) {
+      preventDefault(e);
+      return false;
+    }
+  }
+
+  let supportsPassive = false;
+  try {
+    window.addEventListener(
+      "test",
+      null,
+      Object.defineProperty({}, "passive", {
+        get: function () {
+          supportsPassive = true;
+        },
+      })
+    );
+  } catch (e) {}
+
+  const wheelOpt = supportsPassive ? { passive: false } : false;
+  const wheelEvent =
+    "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
+
+  function disableScroll() {
+    skillsSection.addEventListener("DOMMouseScroll", preventDefault, false); // older FF
+    skillsSection.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
+    skillsSection.addEventListener("touchmove", preventDefault, wheelOpt); // mobile
+    skillsSection.addEventListener(
+      "keydown",
+      preventDefaultForScrollKeys,
+      false
+    );
+  }
+  disableScroll();
+
+  function enableScroll() {
+    skillsSection.removeEventListener("DOMMouseScroll", preventDefault, false);
+    skillsSection.removeEventListener(wheelEvent, preventDefault, wheelOpt);
+    skillsSection.removeEventListener("touchmove", preventDefault, wheelOpt);
+    skillsSection.removeEventListener(
+      "keydown",
+      preventDefaultForScrollKeys,
+      false
+    );
+  }
 
   const startSection = () => {
     setAnimation(skillsDescriptionTitleEl, "add", "opacity-visible", 200);
@@ -114,22 +167,28 @@ window.addEventListener("DOMContentLoaded", () => {
       "skills__description__text--active",
       1800
     );
+    setAnimation(technologiesEl, "add", "opacity-visible", 2200);
+
     setAnimation(
       skillsItemsSorted[0],
       "add",
       "skills__technologies__wrapper__container--active",
-      2100
+      2400
     );
     setAnimation(
       techonologiesLine,
       "add",
       "skills__technologies__line--active",
-      3000
+      3200
     );
-    setAnimation(technologiesLineOverlay, "style", "", 3100, [
+    setAnimation(technologiesLineOverlay, "style", "", 3300, [
       {
         key: "height",
-        value: windowHeight / 2 + "px",
+        value:
+          windowHeight / 2 -
+          skillsItemsSorted[0].offsetHeight / 2 +
+          windowHeight / 3 +
+          "px",
       },
     ]);
 
@@ -143,16 +202,23 @@ window.addEventListener("DOMContentLoaded", () => {
           behavior: "smooth",
         });
       }, 80);
-      skillsModule.changeState({ ...skillsModule.getState(), autoScroll });
-    }, 4400);
+      skillsModule.changeState({
+        ...skillsModule.getState(),
+        autoScroll,
+        animationStarted: true,
+      });
+    }, 4600);
 
     setTimeout(() => {
       enableScroll();
-      globalState.changeState({
-        ...globalState.getState(),
-        allowScroll: false,
-      });
-    }, 4450);
+      const { scrollPosition } = globalState.getState();
+      if (scrollPosition === technologiesStart) {
+        globalState.changeState({
+          ...globalState.getState(),
+          allowScroll: false,
+        });
+      }
+    }, 4650);
   };
 
   technologiesEl.addEventListener("wheel", (e) => {
@@ -190,7 +256,10 @@ window.addEventListener("DOMContentLoaded", () => {
     autoScrollTimeout,
     e,
     isUserScroll,
+    autoScroll,
   }) => {
+    const { animationEnded } = skillsModule.getState();
+
     const lineScroll = windowHeight / 1.2 + e.target.scrollTop;
     const elementCenter =
       skillsItemsSorted[i].offsetTop + skillsItemsSorted[i].offsetHeight / 2;
@@ -200,56 +269,73 @@ window.addEventListener("DOMContentLoaded", () => {
       scrollCenter - skillsItemsSorted[i].offsetHeight / 2 + windowHeight / 3;
     const marginHeight = marginEl.offsetHeight;
 
-    if (lineScroll > lastElementPosition) {
-      if (newScrollPosition > lastElementPosition) {
-        technologiesLineOverlay.style.height =
-          lastElementPosition - marginHeight + "px";
-        setAnimation(
-          skillsItemsSorted[i],
-          "add",
-          "skills__technologies__wrapper__container--active",
-          0
-        );
-        clearInterval(autoScroll);
-        clearTimeout(autoScrollTimeout);
-      } else technologiesLineOverlay.style.height = newScrollPosition + "px";
-      techonologiesLine.style.height =
-        lastElementPosition - marginHeight + "px";
-    } else if (scrollCenter > triggerPoint) {
-      technologiesLineOverlay.style.height = triggerPoint + windowHeight / 3;
-      +"px";
-      if (isUserScroll) {
-        setAnimation(
-          skillsItemsSorted[i],
-          "add",
-          "skills__technologies__wrapper__container--active",
-          1000
-        );
-        skillsItemsSorted[i].classList.add(
-          "skills__technologies__wrapper__container--active"
-        );
-      } else {
-        skillsItemsSorted[i].classList.add(
-          "skills__technologies__wrapper__container--active"
-        );
-      }
+    if (!animationEnded) {
+      if (lineScroll > lastElementPosition) {
+        if (newScrollPosition > lastElementPosition) {
+          technologiesLineOverlay.style.height =
+            lastElementPosition - marginHeight + "px";
+          setAnimation(
+            skillsItemsSorted[i],
+            "add",
+            "skills__technologies__wrapper__container--active",
+            0
+          );
+          clearInterval(autoScroll);
+          clearTimeout(autoScrollTimeout);
+          disableScroll();
+          skillsModule.changeState({
+            ...skillsModule.getState(),
+            animationEnded: true,
+          });
+          setTimeout(() => {
+            globalState.changeState({
+              ...globalState.getState(),
+              allowScroll: true,
+            });
+          }, 1500);
+        } else technologiesLineOverlay.style.height = newScrollPosition + "px";
 
-      const index = setAnimation(technologiesLineOverlay, "style", "", 300, [
-        {
-          key: "height",
-          value: newScrollPosition + "px",
-        },
-      ]);
-      const date = new Date();
-      skillsModule.changeState({
-        ...skillsModule.getState(),
-        animation: { index, date },
-      });
-      if (i < last - 1)
-        skillsModule.changeState({ ...skillsModule.getState(), i: i + 1 });
-    } else {
-      technologiesLineOverlay.style.height = newScrollPosition + "px";
-      techonologiesLine.style.height = lineScroll + "px";
+        techonologiesLine.style.height =
+          lastElementPosition - marginHeight + "px";
+      } else if (scrollCenter > triggerPoint) {
+        technologiesLineOverlay.style.height = triggerPoint + windowHeight / 3;
+        +"px";
+
+        if (isUserScroll) {
+          setAnimation(
+            skillsItemsSorted[i],
+            "add",
+            "skills__technologies__wrapper__container--active",
+            1000
+          );
+          skillsItemsSorted[i].classList.add(
+            "skills__technologies__wrapper__container--active"
+          );
+        } else {
+          skillsItemsSorted[i].classList.add(
+            "skills__technologies__wrapper__container--active"
+          );
+        }
+
+        const index = setAnimation(technologiesLineOverlay, "style", "", 300, [
+          {
+            key: "height",
+            value: newScrollPosition + "px",
+          },
+        ]);
+
+        const date = new Date();
+        skillsModule.changeState({
+          ...skillsModule.getState(),
+          animation: { index, date },
+        });
+
+        if (i < last - 1)
+          skillsModule.changeState({ ...skillsModule.getState(), i: i + 1 });
+      } else {
+        technologiesLineOverlay.style.height = newScrollPosition + "px";
+        techonologiesLine.style.height = lineScroll + "px";
+      }
     }
   };
 
@@ -292,50 +378,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
-
-  function preventDefault(e) {
-    e.preventDefault();
-  }
-
-  function preventDefaultForScrollKeys(e) {
-    if (keys[e.keyCode]) {
-      preventDefault(e);
-      return false;
-    }
-  }
-
-  let supportsPassive = false;
-  try {
-    window.addEventListener(
-      "test",
-      null,
-      Object.defineProperty({}, "passive", {
-        get: function () {
-          supportsPassive = true;
-        },
-      })
-    );
-  } catch (e) {}
-
-  const wheelOpt = supportsPassive ? { passive: false } : false;
-  const wheelEvent =
-    "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
-
-  (function disableScroll() {
-    window.addEventListener("DOMMouseScroll", preventDefault, false); // older FF
-    window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
-    window.addEventListener("touchmove", preventDefault, wheelOpt); // mobile
-    window.addEventListener("keydown", preventDefaultForScrollKeys, false);
-  })();
-
-  function enableScroll() {
-    window.removeEventListener("DOMMouseScroll", preventDefault, false);
-    window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
-    window.removeEventListener("touchmove", preventDefault, wheelOpt);
-    window.removeEventListener("keydown", preventDefaultForScrollKeys, false);
-  }
-
   technologiesEl.addEventListener("scroll", (e) => {
     const {
       i,
@@ -359,6 +401,7 @@ window.addEventListener("DOMContentLoaded", () => {
       autoScrollTimeout,
       e,
       isUserScroll,
+      autoScroll,
     });
 
     hidenLastElement({ i, scrollCenter });
@@ -367,13 +410,34 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   document.addEventListener("scroll", (e) => {
-    const { isSectionStart } = skillsModule.getState();
-    if (window.pageYOffset === technologiesStart && !isSectionStart) {
+    const {
+      isSectionStart,
+      animationStarted,
+      animationEnded,
+    } = skillsModule.getState();
+    const { scrollBack } = globalState.getState();
+
+    if (
+      window.pageYOffset === technologiesStart &&
+      !isSectionStart &&
+      scrollBack
+    ) {
       console.log("startujemy");
       startSection();
       skillsModule.changeState({
         ...skillsModule.getState(),
         isSectionStart: true,
+      });
+    }
+
+    if (
+      window.pageYOffset === technologiesStart &&
+      animationStarted &&
+      !animationEnded
+    ) {
+      globalState.changeState({
+        ...globalState.getState(),
+        allowScroll: false,
       });
     }
   });

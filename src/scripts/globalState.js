@@ -1,6 +1,9 @@
 export const globalState = (() => {
   let state = {
     allowScroll: true,
+    windowHeight: window.innerHeight,
+    scrollPosition: 0,
+    scrollBack: false,
   };
 
   const pub = {};

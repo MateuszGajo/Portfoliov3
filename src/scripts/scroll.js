@@ -1,24 +1,71 @@
+import { globalState } from "./globalState";
+
+const scrollModule = (() => {
+  let state = {
+    scrollBlock: false,
+  };
+  const pub = {};
+
+  pub.changeState = (newState) => {
+    state = newState;
+  };
+
+  pub.getState = () => state;
+
+  return pub;
+})();
+
 setTimeout(function () {
   window.scrollTo(0, 0);
+  globalState.changeState({ ...globalState.getState(), scrollBack: true });
 }, 40);
 
-import { globalState } from "./globalState";
-console.log(globalState);
-
-const windowHeight = window.innerHeight;
-
-const scrollDown = () =>
-  window.scrollBy({
-    top: windowHeight,
-    behavior: "smooth",
-  });
+const scrollDown = () => {
+  const { scrollBlock } = scrollModule.getState();
+  const { windowHeight, scrollPosition } = globalState.getState();
+  if (!scrollBlock) {
+    const newScrollPosition = scrollPosition + windowHeight;
+    window.scroll({
+      top: newScrollPosition,
+      left: 0,
+      behavior: "smooth",
+    });
+    globalState.changeState({
+      ...globalState.getState(),
+      scrollPosition: newScrollPosition,
+    });
+    scrollModule.changeState({ ...scrollModule.getState(), scrollBlock: true });
+    setTimeout(() => {
+      scrollModule.changeState({
+        ...scrollModule.getState(),
+        scrollBlock: false,
+      });
+    }, 500);
+  }
+};
 
 const scrollUp = () => {
-  window.scrollBy({
-    top: windowHeight * -1,
-    left: 0,
-    behavior: "smooth",
-  });
+  const { scrollBlock } = scrollModule.getState();
+  const { windowHeight, scrollPosition } = globalState.getState();
+  if (!scrollBlock) {
+    const newScrollPosition = scrollPosition - windowHeight;
+    window.scroll({
+      top: newScrollPosition,
+      left: 0,
+      behavior: "smooth",
+    });
+    globalState.changeState({
+      ...globalState.getState(),
+      scrollPosition: newScrollPosition,
+    });
+    scrollModule.changeState({ ...scrollModule.getState(), scrollBlock: true });
+    setTimeout(() => {
+      scrollModule.changeState({
+        ...scrollModule.getState(),
+        scrollBlock: false,
+      });
+    }, 500);
+  }
 };
 
 const checkScrollDirection = (e) => {
