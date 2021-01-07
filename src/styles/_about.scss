@@ -20,10 +20,10 @@
 .about__title__text {
   font-size: 100rem;
   transition: transform 0.3s, opacity 0.2s;
-  // transition: transform 4s cubic-bezier(0.42, 0, 1, 0), opacity 0.2s;
   transform: scale(0.05);
   white-space: nowrap;
   opacity: 0;
+  color: #c89d9d;
 }
 
 .about__title__text--active {
@@ -42,6 +42,7 @@
 }
 
 .about__container__item {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,11 +65,41 @@
   grid-area: bottom-right;
 }
 
+.about__container__item--top-right .about__container__item__text {
+  transform-origin: bottom left;
+}
+
+.about__container__item--bottom-right .about__container__item__text {
+  transform-origin: top left;
+}
+
+.about__container__item--top-left .about__container__item__text {
+  transform-origin: bottom right;
+}
+
+.about__container__item--bottom-left .about__container__item__text {
+  transform-origin: top right;
+}
+
+.about__container__item--bottom-left .about__container__item__text,
+.about__container__item--bottom-right .about__container__item__text {
+  align-items: flex-start;
+}
+
 .about__container__item__text {
+  display: flex;
+  align-items: flex-end;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   font-size: 3rem;
   transform: scale(0.1);
   transform-origin: 60% 60%;
   transition: transform 0.6s;
+  opacity: 0;
+  color: #adaea5;
 }
 
 .about__container__item--top-left .about__container__item__text:nth-child(1) {

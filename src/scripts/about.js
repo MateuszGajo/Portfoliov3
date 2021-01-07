@@ -1,6 +1,6 @@
 import { globalState } from "./globalState";
 
-const { windowWidth } = globalState.getState();
+const { windowWidth, windowHeight } = globalState.getState();
 
 const topLeftTexts = document.querySelectorAll(
   ".about__container__item--top-left .about__container__item__text"
@@ -91,17 +91,44 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const startSection = () => {
     setAnimation(titleEl, "add", "opacity-visible", 370);
-    // setAnimation(titleEl, "add", "about__title__text--active", 600);
   };
 
-  let firstCord = windowWidth / 12.5;
-  let firstScale = 0.5;
-  let secondCord = 0;
-  let secondScale = 0;
-  let firstIndex = 0;
-  let secondIndex = 1;
-  let firstSign = -1;
-  let secondSign = 1;
+  const properties = [
+    {
+      cord: windowWidth / 30,
+      scale: 0.5,
+      index: 0,
+      opacity: 0.1,
+      xSign: "-",
+      ySign: "-",
+    },
+    {
+      cord: windowWidth / 30,
+      scale: 0.2,
+      index: 1,
+      opacity: 0.1,
+      xSign: "",
+      ySign: "",
+    },
+    {
+      cord: -(windowWidth / 100) * 5,
+      scale: -0.25,
+      index: 2,
+      opacity: -0.5,
+      xSign: "",
+      ySign: "-",
+    },
+    {
+      cord: -(windowWidth / 100) * 10,
+      scale: -0.5,
+      index: 3,
+      opacity: -1,
+      xSign: "-",
+      ySign: "",
+    },
+  ];
+
+  let titleScale = 0.1;
 
   document.addEventListener("scroll", () => {
     const { scrollBack } = globalState.getState();
@@ -116,57 +143,65 @@ window.addEventListener("DOMContentLoaded", () => {
         isSectionStart: true,
       });
       startSection();
+      globalState.changeState({
+        ...globalState.getState(),
+        allowScroll: false,
+      });
       document.addEventListener("wheel", (e) => {
-        if (c > 30) {
-          if (firstIndex < textsArray.length && firstScale < 2) {
-            console.log(textsArray[firstIndex]);
-            firstCord = firstCord + windowWidth / 50;
-            firstScale = firstScale + 0.08;
-            textsArray[
-              firstIndex
-            ].style.transform = `scale(${firstScale}) translate(${
-              firstCord * firstSign
-            }px, -${firstCord}px)`;
-            console.log(textsArray[firstIndex]);
-            if (firstScale >= 2) {
-              firstCord = 0;
-              firstScale = 0;
-              firstIndex += 2;
-              firstSign *= -1;
+        if (titleScale > 5) {
+          for (let i = 0; i < 4; i++) {
+            let { cord, scale, index, opacity, xSign, ySign } = properties[i];
+
+            if (index < textsArray.length) {
+              if (opacity < 1) {
+                opacity += 0.1;
+                textsArray[index].style.opacity = opacity;
+              }
+
+              cord = cord + windowWidth / 100;
+              scale = scale + 0.05;
+              textsArray[index].style.transform = `scale(${scale}) translate(${
+                xSign + cord
+              }px, ${ySign + cord}px)`;
+
+              const elProp = textsArray[index].getBoundingClientRect();
+              const topPositon = elProp.top;
+              const bottomPosition = elProp.bottom;
+              if (
+                index === textsArray.length - 1 &&
+                (bottomPosition < 0 || topPositon > windowHeight)
+              ) {
+                globalState.changeState({
+                  ...globalState.getState(),
+                  allowScroll: true,
+                });
+              }
+
+              if (bottomPosition < 0 || topPositon > windowHeight) {
+                opacity = 0.1;
+                cord = 0;
+                scale = 0.1;
+                index += 4;
+                if (index < textsArray.length) {
+                  textsArray[index].style.opacity = opacity;
+                }
+              }
+              properties[i] = {
+                cord,
+                scale,
+                index,
+                opacity,
+                xSign,
+                ySign,
+              };
             }
           }
-
-          if (secondIndex < textsArray.length && secondScale < 2) {
-            secondCord = secondCord + windowWidth / 50;
-            secondScale = secondScale + 0.08;
-            textsArray[
-              secondIndex
-            ].style.transform = `scale(${secondScale}) translate(${
-              secondCord * secondSign
-            }px, ${secondCord}px)`;
-
-            if (secondScale >= 2) {
-              secondCord = 0;
-              secondScale = 0;
-              secondIndex += 2;
-              secondSign *= -1;
-            }
-          }
-        } else {
-          c = c * 1.4;
-          titleEl.style.transform = `scale(${c})`;
+        }
+        if (titleScale < 30) {
+          titleScale = titleScale * 1.4;
+          titleEl.style.transform = `scale(${titleScale})`;
         }
       });
     }
   });
 });
-
-const aa = document.querySelector(
-  ".about__container__item--top-left .about__container__item__text"
-);
-
-const bb = document.querySelector(
-  ".about__container__item--bottom-right .about__container__item__text"
-);
-
-let c = 0.1;

@@ -422,7 +422,6 @@ window.addEventListener("DOMContentLoaded", () => {
       !isSectionStart &&
       scrollBack
     ) {
-      console.log("startujemy");
       startSection();
       skillsModule.changeState({
         ...skillsModule.getState(),
