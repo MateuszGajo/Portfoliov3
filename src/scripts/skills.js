@@ -1,5 +1,6 @@
 import { globalState } from "./globalState";
 window.addEventListener("DOMContentLoaded", () => {
+  const skillsDescriptionEl = document.querySelector(".skills__description");
   const skillsDescriptionTitleEl = document.querySelector(
     ".skills__description__title"
   );
@@ -25,6 +26,8 @@ window.addEventListener("DOMContentLoaded", () => {
   const marginEl = document.querySelector(".skills__technologies__margin");
 
   const technologiesStart = skillsSection.offsetTop + technologiesEl.offsetTop;
+  const descriptionStart =
+    skillsSection.offsetTop + skillsDescriptionEl.offsetTop;
 
   const skillsItemsSorted = [].map
     .call(skillsItems, function (el) {
@@ -36,7 +39,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const skillsModule = (() => {
     let state = {
-      isSectionStart: false,
+      isTechnologiesStart: false,
+      isDescriptionStart: false,
       i: 0,
       last: skillsItemsSorted.length,
       animation: {
@@ -137,23 +141,35 @@ window.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  const startSection = () => {
+  const startDescription = () => {
     setAnimation(skillsDescriptionTitleEl, "add", "opacity-visible", 200);
-
-    setAnimation(skillsDescriptionTitleEl, "style", "", 600, [
-      {
-        key: "left",
-        value: "20%",
-      },
-      {
-        key: "bottom",
-        value: `${windowHeight - SkillsDescriptionTextEl.offsetTop + 10}px`,
-      },
-      {
-        key: "transform",
-        value: `translateX(-50%) scale(1)`,
-      },
-    ]);
+    if (windowWidth < 1023) {
+      setAnimation(skillsDescriptionTitleEl, "style", "", 600, [
+        {
+          key: "bottom",
+          value: `${windowHeight - SkillsDescriptionTextEl.offsetTop + 10}px`,
+        },
+        {
+          key: "transform",
+          value: `translateX(-50%) scale(1)`,
+        },
+      ]);
+    } else {
+      setAnimation(skillsDescriptionTitleEl, "style", "", 600, [
+        {
+          key: "left",
+          value: "20%",
+        },
+        {
+          key: "bottom",
+          value: `${windowHeight - SkillsDescriptionTextEl.offsetTop + 10}px`,
+        },
+        {
+          key: "transform",
+          value: `translateX(-50%) scale(1)`,
+        },
+      ]);
+    }
 
     setAnimation(
       SkillsDescriptionTextEl,
@@ -167,21 +183,24 @@ window.addEventListener("DOMContentLoaded", () => {
       "skills__description__text--active",
       1800
     );
-    setAnimation(technologiesEl, "add", "opacity-visible", 2200);
+  };
+
+  const startTechnologies = (delay) => {
+    setAnimation(technologiesEl, "add", "opacity-visible", 200 + delay);
 
     setAnimation(
       skillsItemsSorted[0],
       "add",
       "skills__technologies__wrapper__container--active",
-      2400
+      400 + delay
     );
     setAnimation(
       techonologiesLine,
       "add",
       "skills__technologies__line--active",
-      3200
+      1200 + delay
     );
-    setAnimation(technologiesLineOverlay, "style", "", 3300, [
+    setAnimation(technologiesLineOverlay, "style", "", 1300 + delay, [
       {
         key: "height",
         value:
@@ -207,7 +226,7 @@ window.addEventListener("DOMContentLoaded", () => {
         autoScroll,
         animationStarted: true,
       });
-    }, 4600);
+    }, 2600 + delay);
 
     setTimeout(() => {
       enableScroll();
@@ -218,7 +237,7 @@ window.addEventListener("DOMContentLoaded", () => {
           allowScroll: false,
         });
       }
-    }, 4650);
+    }, 2650 + delay);
   };
 
   technologiesEl.addEventListener("wheel", (e) => {
@@ -411,7 +430,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("scroll", (e) => {
     const {
-      isSectionStart,
+      isTechnologiesStart,
+      isDescriptionStart,
       animationStarted,
       animationEnded,
     } = skillsModule.getState();
@@ -419,13 +439,29 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (
       window.pageYOffset === technologiesStart &&
-      !isSectionStart &&
+      !isTechnologiesStart &&
       scrollBack
     ) {
-      startSection();
+      let delay = 0;
+      if (technologiesStart == descriptionStart) {
+        delay = 2000;
+      }
+      startTechnologies(delay);
       skillsModule.changeState({
         ...skillsModule.getState(),
-        isSectionStart: true,
+        isTechnologiesStart: true,
+      });
+    }
+
+    if (
+      window.pageYOffset === descriptionStart &&
+      !isDescriptionStart &&
+      scrollBack
+    ) {
+      startDescription();
+      skillsModule.changeState({
+        ...skillsModule.getState(),
+        isDescriptionStart: true,
       });
     }
 
