@@ -42,8 +42,6 @@ for (let i = 0; i < maxItem; i++) {
   if (bottomLeftTexts[i]) textsArray.push(bottomLeftTexts[i]);
 }
 
-console.log(textsArray);
-
 window.addEventListener("DOMContentLoaded", () => {
   const aboutSection = document.querySelector(".about");
   const titleEl = document.querySelector(".about__title__text");
@@ -53,6 +51,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const aboutModule = (() => {
     let state = {
       isSectionStart: false,
+      lastTouchPosition: 0,
     };
 
     const pub = {};
@@ -130,6 +129,62 @@ window.addEventListener("DOMContentLoaded", () => {
 
   let titleScale = 0.1;
 
+  const scrollSection = (multiplier) => {
+    if (titleScale > 5) {
+      for (let i = 0; i < 4; i++) {
+        let { cord, scale, index, opacity, xSign, ySign } = properties[i];
+
+        if (index < textsArray.length) {
+          if (opacity < 1) {
+            opacity += 0.1 * multiplier;
+            textsArray[index].style.opacity = opacity;
+          }
+
+          cord = cord + (windowWidth / 100) * multiplier;
+          scale = scale + 0.05 * multiplier;
+          textsArray[index].style.transform = `scale(${scale}) translate(${
+            xSign + cord
+          }px, ${ySign + cord}px)`;
+
+          const elProp = textsArray[index].getBoundingClientRect();
+          const topPositon = elProp.top;
+          const bottomPosition = elProp.bottom;
+          if (
+            index === textsArray.length - 1 &&
+            (bottomPosition < 0 || topPositon > windowHeight)
+          ) {
+            globalState.changeState({
+              ...globalState.getState(),
+              allowScroll: true,
+            });
+          }
+
+          if (bottomPosition < 0 || topPositon > windowHeight) {
+            opacity = 0.1;
+            cord = 0;
+            scale = 0.1;
+            index += 4;
+            if (index < textsArray.length) {
+              textsArray[index].style.opacity = opacity;
+            }
+          }
+          properties[i] = {
+            cord,
+            scale,
+            index,
+            opacity,
+            xSign,
+            ySign,
+          };
+        }
+      }
+    }
+    if (titleScale < 30) {
+      titleScale = titleScale * 1.4 * multiplier;
+      titleEl.style.transform = `scale(${titleScale})`;
+    }
+  };
+
   document.addEventListener("scroll", () => {
     const { scrollBack } = globalState.getState();
     const { isSectionStart } = aboutModule.getState();
@@ -148,59 +203,18 @@ window.addEventListener("DOMContentLoaded", () => {
         allowScroll: false,
       });
       document.addEventListener("wheel", (e) => {
-        if (titleScale > 5) {
-          for (let i = 0; i < 4; i++) {
-            let { cord, scale, index, opacity, xSign, ySign } = properties[i];
-
-            if (index < textsArray.length) {
-              if (opacity < 1) {
-                opacity += 0.1;
-                textsArray[index].style.opacity = opacity;
-              }
-
-              cord = cord + windowWidth / 100;
-              scale = scale + 0.05;
-              textsArray[index].style.transform = `scale(${scale}) translate(${
-                xSign + cord
-              }px, ${ySign + cord}px)`;
-
-              const elProp = textsArray[index].getBoundingClientRect();
-              const topPositon = elProp.top;
-              const bottomPosition = elProp.bottom;
-              if (
-                index === textsArray.length - 1 &&
-                (bottomPosition < 0 || topPositon > windowHeight)
-              ) {
-                globalState.changeState({
-                  ...globalState.getState(),
-                  allowScroll: true,
-                });
-              }
-
-              if (bottomPosition < 0 || topPositon > windowHeight) {
-                opacity = 0.1;
-                cord = 0;
-                scale = 0.1;
-                index += 4;
-                if (index < textsArray.length) {
-                  textsArray[index].style.opacity = opacity;
-                }
-              }
-              properties[i] = {
-                cord,
-                scale,
-                index,
-                opacity,
-                xSign,
-                ySign,
-              };
-            }
-          }
-        }
-        if (titleScale < 30) {
-          titleScale = titleScale * 1.4;
-          titleEl.style.transform = `scale(${titleScale})`;
-        }
+        scrollSection(1);
+      });
+      document.addEventListener("touchstart", (e) => {
+        aboutModule.changeState({
+          ...aboutModule.getState(),
+          lastTouchPosition: e.changedTouches[0].pageY,
+        });
+      });
+      document.addEventListener("touchend", (e) => {
+        const { lastTouchPosition } = aboutModule.getState();
+        if (Math.abs(lastTouchPosition - e.changedTouches[0].pageY) > 50)
+          scrollSection(2);
       });
     }
   });

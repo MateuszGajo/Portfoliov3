@@ -26,6 +26,7 @@ const scrollDown = () => {
   if (!scrollBlock) {
     const newScrollPosition = scrollPosition + windowHeight;
     window.scroll({
+      lastTouchPosition: 0,
       top: newScrollPosition,
       left: 0,
       behavior: "smooth",
@@ -79,4 +80,25 @@ const checkScrollDirection = (e) => {
   }
 };
 
+const touchStart = (e) => {
+  scrollModule.changeState({
+    ...scrollModule.getState(),
+    lastTouchPosition: e.changedTouches[0].pageY,
+  });
+};
+
+const touchEnd = (e) => {
+  const { lastTouchPosition } = scrollModule.getState();
+  const { allowScroll } = globalState.getState();
+  if (allowScroll) {
+    if (lastTouchPosition - e.changedTouches[0].pageY > 100) {
+      scrollDown();
+    } else if (e.changedTouches[0].pageY - lastTouchPosition > 100) {
+      scrollUp();
+    }
+  }
+};
+
 document.addEventListener("wheel", checkScrollDirection);
+document.addEventListener("touchstart", touchStart);
+document.addEventListener("touchend", touchEnd);

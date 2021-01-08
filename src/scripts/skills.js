@@ -128,7 +128,7 @@ window.addEventListener("DOMContentLoaded", () => {
       false
     );
   }
-  disableScroll();
+  // disableScroll();
 
   function enableScroll() {
     skillsSection.removeEventListener("DOMMouseScroll", preventDefault, false);
