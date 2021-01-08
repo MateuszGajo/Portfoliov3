@@ -6,7 +6,7 @@ module.exports = {
   mode: devMode ? "development" : "production",
   entry: ["./src/scripts/main.js", "./src/styles/main.scss"],
   output: {
-    path: path.resolve(__dirname, "public"),
+    path: path.resolve(__dirname, "docs"),
     publicPath: "/assets",
     filename: "assets/scripts/bundle.js",
   },
