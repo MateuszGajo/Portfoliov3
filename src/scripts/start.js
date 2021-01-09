@@ -39,62 +39,62 @@ window.addEventListener("DOMContentLoaded", () => {
     ".start__downbar__container--title"
   );
 
-  setAnimation(contentLineEl, "add", "height-max", 2400);
-  setAnimation(contentLineEl, "add", `start__line--active`, 3000);
-  setAnimation(downbarLineEl, "add", "start__line--downbar--active", 3400);
+  setAnimation(contentLineEl, "add", "height-max", 1900);
+  setAnimation(contentLineEl, "add", `start__line--active`, 2600); //-400
+  setAnimation(downbarLineEl, "add", "start__line--downbar--active", 2700);
   setAnimation(
     downbarTitleLineEl,
     "add",
     "start__downbar__text__line--draw-active",
+    3100
+  );
+  setAnimation(downbarTitleEl, "add", "opacity-visible", 3200);
+  setAnimation(
+    downbarAuthorLineEl,
+    "add",
+    "start__downbar__text__line--draw-active",
+    3100
+  );
+  setAnimation(downbarAuthorEl, "add", "opacity-visible", 3400);
+  setAnimation(downbarLineEl, "add", "start__line--active", 3600); //3600
+  setAnimation(
+    downbarTitleLineEl,
+    "add",
+    "start__downbar__text__line--active",
     3500
   );
-  setAnimation(downbarTitleEl, "add", "opacity-visible", 3600);
-  setAnimation(
-    downbarAuthorLineEl,
-    "add",
-    "start__downbar__text__line--draw-active",
-    3700
-  );
-  setAnimation(downbarAuthorEl, "add", "opacity-visible", 3800);
-  setAnimation(downbarLineEl, "add", "start__line--active", 4000);
-  setAnimation(
-    downbarTitleLineEl,
-    "add",
-    "start__downbar__text__line--active",
-    4100
-  );
   setAnimation(
     downbarAuthorLineEl,
     "add",
     "start__downbar__text__line--active",
-    4300
+    3900
   );
-  setAnimation(downbarTitleOverlayEl, "add", "width-max", 4500);
-  setAnimation(downbarAuthorOverlayEl, "add", "width-max", 4700);
+  setAnimation(downbarTitleOverlayEl, "add", "width-max", 4100);
+  setAnimation(downbarAuthorOverlayEl, "add", "width-max", 4300);
   setAnimation(
     downbarAuthorLineEl,
     "remove",
     "start__downbar__text__line--draw-active",
-    5800
+    5400
   );
   setAnimation(
     downbarTitleLineEl,
     "remove",
     "start__downbar__text__line--draw-active",
-    5900
+    5500
   );
-  setAnimation(downbarLineEl, "remove", "start__line--downbar--active", 6000);
-  setAnimation(contentLineEl, "remove", "height-max", 6300);
+  setAnimation(downbarLineEl, "remove", "start__line--downbar--active", 5600);
+  setAnimation(contentLineEl, "remove", "height-max", 5900);
   downbarEls.forEach((item) => {
-    setAnimation(item, "add", "start__downbar__container--move", 7000);
+    setAnimation(item, "add", "start__downbar__container--move", 6500);
   });
-  setAnimation(downbarAuthorEl, "add", "visibility-hidden", 7000);
-  setAnimation(downbarAuthorOverlayEl, "add", "visibility-visble", 7000);
+  setAnimation(downbarAuthorEl, "add", "visibility-hidden", 6500);
+  setAnimation(downbarAuthorOverlayEl, "add", "visibility-visble", 6500);
   setAnimation(
     downbarTitleContainerEl,
     "add",
     "start__downbar__container--title--invisible",
-    7000
+    6500
   );
 
   setTimeout(() => {
@@ -103,7 +103,7 @@ window.addEventListener("DOMContentLoaded", () => {
       .forEach((item, index) => {
         shuffleText(item, index + 1);
       });
-  }, 7500);
+  }, 7000);
 
   const shuffleText = (el, time) => {
     const initialLetter = el.textContent;
@@ -114,7 +114,7 @@ window.addEventListener("DOMContentLoaded", () => {
         );
         return shuffle;
       })(),
-      10
+      9
     );
 
     setTimeout(() => {
@@ -129,7 +129,7 @@ window.addEventListener("DOMContentLoaded", () => {
           setTimeout(() => {
             children[i].classList.add("start__content_p--move-up");
             return moveLeft(children[i], i);
-          }, 2200 + i * 200);
+          }, 1000 + i * 200);
         }
 
         const moveLeft = (el, index) => {

@@ -128,9 +128,11 @@ window.addEventListener("DOMContentLoaded", () => {
   ];
 
   let titleScale = 0.1;
+  let titleOpacity = 1;
+  let titleDisplay = true;
 
   const scrollSection = (multiplier) => {
-    if (titleScale > 5) {
+    if (titleScale > 0.4) {
       for (let i = 0; i < 4; i++) {
         let { cord, scale, index, opacity, xSign, ySign } = properties[i];
 
@@ -157,6 +159,7 @@ window.addEventListener("DOMContentLoaded", () => {
               ...globalState.getState(),
               allowScroll: true,
             });
+            clearInterval(interval);
           }
 
           if (bottomPosition < 0 || topPositon > windowHeight) {
@@ -179,17 +182,27 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       }
     }
-    if (titleScale < 30) {
-      titleScale = titleScale * 1.4 * multiplier;
+    if (titleScale < 14) {
+      if (multiplier < 1) {
+        titleScale = titleScale * 1.1;
+      } else if (multiplier > 1) {
+        titleScale = (titleScale * 1.5 * multiplier) / 1.5;
+      } else titleScale = titleScale * 1.5;
+      titleOpacity = titleOpacity - 0.085;
+      if (titleOpacity == 0) {
+        titleEl.style.display = "none";
+      }
+
       titleEl.style.transform = `scale(${titleScale})`;
+      titleEl.style.opacity = titleOpacity;
     }
   };
-
+  let interval;
   document.addEventListener("scroll", () => {
     const { scrollBack } = globalState.getState();
     const { isSectionStart } = aboutModule.getState();
     if (
-      window.pageYOffset === aboutStartPosition &&
+      Math.abs(window.pageYOffset - aboutStartPosition) < 2 &&
       scrollBack &&
       !isSectionStart
     ) {
@@ -198,6 +211,12 @@ window.addEventListener("DOMContentLoaded", () => {
         isSectionStart: true,
       });
       startSection();
+      setTimeout(() => {
+        interval = setInterval(() => {
+          scrollSection(0.4);
+        }, 100);
+      }, 800);
+
       globalState.changeState({
         ...globalState.getState(),
         allowScroll: false,

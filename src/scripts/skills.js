@@ -1,11 +1,10 @@
 import { globalState } from "./globalState";
 window.addEventListener("DOMContentLoaded", () => {
+  const { windowHeight, windowWidth } = globalState.getState();
   const skillsDescriptionEl = document.querySelector(".skills__description");
   const skillsDescriptionTitleEl = document.querySelector(
     ".skills__description__title"
   );
-  const windowHeight = window.innerHeight;
-  const windowWidth = window.innerWidth;
   const skillsSection = document.querySelector(".skills");
   const SkillsDescriptionTextEl = document.querySelector(
     ".skills__description__text"
@@ -128,7 +127,7 @@ window.addEventListener("DOMContentLoaded", () => {
       false
     );
   }
-  // disableScroll();
+  disableScroll();
 
   function enableScroll() {
     skillsSection.removeEventListener("DOMMouseScroll", preventDefault, false);
@@ -217,7 +216,7 @@ window.addEventListener("DOMContentLoaded", () => {
       );
       const autoScroll = setInterval(() => {
         technologiesEl.scrollBy({
-          top: 10,
+          top: 13,
           behavior: "smooth",
         });
       }, 80);
@@ -380,7 +379,7 @@ window.addEventListener("DOMContentLoaded", () => {
         );
         const autoScroll = setInterval(() => {
           technologiesEl.scrollBy({
-            top: 10,
+            top: 13,
             behavior: "smooth",
           });
         }, 80);
@@ -438,7 +437,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const { scrollBack } = globalState.getState();
 
     if (
-      window.pageYOffset === technologiesStart &&
+      Math.abs(window.pageYOffset - technologiesStart) < 2 &&
       !isTechnologiesStart &&
       scrollBack
     ) {
@@ -452,9 +451,8 @@ window.addEventListener("DOMContentLoaded", () => {
         isTechnologiesStart: true,
       });
     }
-
     if (
-      window.pageYOffset === descriptionStart &&
+      Math.abs(window.pageYOffset - descriptionStart) < 2 &&
       !isDescriptionStart &&
       scrollBack
     ) {
@@ -464,9 +462,8 @@ window.addEventListener("DOMContentLoaded", () => {
         isDescriptionStart: true,
       });
     }
-
     if (
-      window.pageYOffset === technologiesStart &&
+      Math.abs(window.pageYOffset - technologiesStart) < 2 &&
       animationStarted &&
       !animationEnded
     ) {

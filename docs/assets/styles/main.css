@@ -89,39 +89,39 @@ a {
 .start__title__container__letter {
   display: inline-block;
   animation-name: bounce;
-  animation-duration: 1.5s;
-  animation-delay: 1s;
+  animation-duration: 1.4s;
+  animation-delay: 0.8s;
   animation-iteration-count: 1; }
 
 .start__title__container__letter:nth-child(2) {
-  animation-delay: 1.1s; }
+  animation-delay: 0.9s; }
 
 .start__title__container__letter:nth-child(3) {
-  animation-delay: 1.2s; }
+  animation-delay: 1s; }
 
 .start__title__container__letter:nth-child(4) {
-  animation-delay: 1.3s; }
+  animation-delay: 1.1s; }
 
 .start__title__container__letter:nth-child(5) {
-  animation-delay: 1.4s; }
+  animation-delay: 1.2s; }
 
 .start__title__container__letter:nth-child(6) {
-  animation-delay: 1.5s; }
+  animation-delay: 1.3s; }
 
 .start__title__container__letter:nth-child(7) {
-  animation-delay: 1.6s; }
+  animation-delay: 1.4s; }
 
 .start__title__container__letter:nth-child(8) {
-  animation-delay: 1.7s; }
+  animation-delay: 1.5s; }
 
 .start__title__container__letter:nth-child(9) {
-  animation-delay: 1.8s; }
+  animation-delay: 1.5s; }
 
 .start__title__container__letter:nth-child(10) {
-  animation-delay: 1.9s; }
+  animation-delay: 1.6s; }
 
 .start__title__container__letter:nth-child(11) {
-  animation-delay: 2s; }
+  animation-delay: 1.7s; }
 
 .start__line {
   display: block;
@@ -131,7 +131,7 @@ a {
   background: linear-gradient(to bottom, #c89d9d 50%, white 50%);
   background-position: bottom;
   background-size: 100% 200%;
-  transition: background-position 1s ease-out, height 1s;
+  transition: background-position 1s ease-out, height 0.8s;
   height: 0; }
 
 .start__line--content {
@@ -523,7 +523,7 @@ a {
   transform: translate(-50%, -50%);
   font-size: 6rem;
   color: #222;
-  transition: color 0.2s 1.3s; }
+  transition: color 0.2s 0.9s; }
 
 .skills__technologies__wrapper__container__item__container__hexagon__element {
   position: absolute;
@@ -561,7 +561,7 @@ a {
   height: 0;
   width: 100%;
   background-color: #c89d9d;
-  transition: height 0.3s;
+  transition: height 0.2s;
   animation-delay: 0.3s; }
 
 .skills__technologies__wrapper__container__item__container__hexagon__element__overlay--center-left {
@@ -569,13 +569,13 @@ a {
 
 .skills__technologies__wrapper__container__item__container:nth-of-type(1)
 .skills__technologies__wrapper__container__item__container__hexagon__element__overlay {
-  animation-delay: 0.6s; }
+  animation-delay: 0.5s; }
 
 .skills__technologies__wrapper__container__item__container__hexagon__element__overlay--bottom-left {
-  animation-delay: 0.9s; }
+  animation-delay: 0.7s; }
 
 .skills__technologies__wrapper__container__item__container__hexagon__element__overlay--bottom-right {
-  animation-delay: 0.9s; }
+  animation-delay: 0.7s; }
 
 .skills__technologies__wrapper__container--active
 .skills__technologies__wrapper__container__item__container__hexagon__element__overlay {
@@ -590,7 +590,7 @@ a {
 .skills__technologies__wrapper__container--deactive
 .skills__technologies__wrapper__container__item__container__hexagon__icon {
   color: #222;
-  transition: 0.2s 0.9s; }
+  transition: 0.2s 0.6s; }
 
 .skills__technologies__wrapper__container--deactive
 .skills__technologies__wrapper__container__item__container__hexagon__element__overlay {
@@ -598,12 +598,12 @@ a {
 
 .skills__technologies__wrapper__container--deactive
 .skills__technologies__wrapper__container__item__container__hexagon__element__overlay {
-  animation-delay: 0.6s; }
+  animation-delay: 0.4s; }
 
 .skills__technologies__wrapper__container--deactive
 .skills__technologies__wrapper__container__item__container:nth-of-type(1)
 .skills__technologies__wrapper__container__item__container__hexagon__element__overlay {
-  animation-delay: 0.3s; }
+  animation-delay: 0.2s; }
 
 .skills__technologies__wrapper__container--deactive
 .skills__technologies__wrapper__container__item__container__hexagon__element__overlay--bottom-left {

@@ -18,11 +18,12 @@ const scrollModule = (() => {
 setTimeout(function () {
   window.scrollTo(0, 0);
   globalState.changeState({ ...globalState.getState(), scrollBack: true });
-}, 40);
+}, 100);
 
 const scrollDown = () => {
   const { scrollBlock } = scrollModule.getState();
   const { windowHeight, scrollPosition } = globalState.getState();
+  console.log(windowHeight);
   if (!scrollBlock) {
     const newScrollPosition = scrollPosition + windowHeight;
     window.scroll({
@@ -50,6 +51,7 @@ const scrollUp = () => {
   const { windowHeight, scrollPosition } = globalState.getState();
   if (!scrollBlock) {
     const newScrollPosition = scrollPosition - windowHeight;
+    console.log(windowHeight);
     window.scroll({
       top: newScrollPosition,
       left: 0,
@@ -91,9 +93,9 @@ const touchEnd = (e) => {
   const { lastTouchPosition } = scrollModule.getState();
   const { allowScroll } = globalState.getState();
   if (allowScroll) {
-    if (lastTouchPosition - e.changedTouches[0].pageY > 100) {
+    if (lastTouchPosition - e.changedTouches[0].pageY > 10) {
       scrollDown();
-    } else if (e.changedTouches[0].pageY - lastTouchPosition > 100) {
+    } else if (e.changedTouches[0].pageY - lastTouchPosition > 10) {
       scrollUp();
     }
   }
