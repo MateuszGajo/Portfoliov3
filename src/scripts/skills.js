@@ -219,7 +219,7 @@ window.addEventListener("DOMContentLoaded", () => {
           top: 13,
           behavior: "smooth",
         });
-      }, 80);
+      }, 70);
       skillsModule.changeState({
         ...skillsModule.getState(),
         autoScroll,
@@ -382,7 +382,7 @@ window.addEventListener("DOMContentLoaded", () => {
             top: 13,
             behavior: "smooth",
           });
-        }, 80);
+        }, 70);
         skillsModule.changeState({ ...skillsModule.getState(), autoScroll });
       }, 1200);
       skillsModule.changeState({

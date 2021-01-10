@@ -129,9 +129,44 @@ window.addEventListener("DOMContentLoaded", () => {
 
   let titleScale = 0.1;
   let titleOpacity = 1;
-  let titleDisplay = true;
+  let animationStopped = false;
+  let blockAnimation = false;
 
   const scrollSection = (multiplier) => {
+    if (
+      titleScale > 0.4 &&
+      titleScale < 10 &&
+      !animationStopped &&
+      Math.abs(window.pageYOffset - aboutStartPosition) > 2
+    ) {
+      animationStopped = true;
+      return clearInterval(interval);
+    } else if (
+      Math.abs(window.pageYOffset - aboutStartPosition) < 2 &&
+      titleScale > 0.4 &&
+      !blockAnimation
+    ) {
+      blockAnimation = true;
+      globalState.changeState({
+        ...globalState.getState(),
+        allowScroll: false,
+      });
+      document.addEventListener("wheel", (e) => {
+        scrollSection(1);
+      });
+      document.addEventListener("touchstart", (e) => {
+        aboutModule.changeState({
+          ...aboutModule.getState(),
+          lastTouchPosition: e.changedTouches[0].pageY,
+        });
+      });
+      document.addEventListener("touchend", (e) => {
+        const { lastTouchPosition } = aboutModule.getState();
+        if (Math.abs(lastTouchPosition - e.changedTouches[0].pageY) > 50)
+          scrollSection(2);
+      });
+    }
+
     if (titleScale > 0.4) {
       for (let i = 0; i < 4; i++) {
         let { cord, scale, index, opacity, xSign, ySign } = properties[i];
@@ -155,6 +190,8 @@ window.addEventListener("DOMContentLoaded", () => {
             index === textsArray.length - 1 &&
             (bottomPosition < 0 || topPositon > windowHeight)
           ) {
+            console.log(index);
+            console.log("koniec");
             globalState.changeState({
               ...globalState.getState(),
               allowScroll: true,
@@ -163,6 +200,8 @@ window.addEventListener("DOMContentLoaded", () => {
           }
 
           if (bottomPosition < 0 || topPositon > windowHeight) {
+            console.log(windowHeight);
+            console.log(bottomPosition, topPositon);
             opacity = 0.1;
             cord = 0;
             scale = 0.1;
@@ -183,6 +222,7 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
     if (titleScale < 14) {
+      console.log(titleScale);
       if (multiplier < 1) {
         titleScale = titleScale * 1.1;
       } else if (multiplier > 1) {
@@ -216,7 +256,16 @@ window.addEventListener("DOMContentLoaded", () => {
           scrollSection(0.4);
         }, 100);
       }, 800);
+    }
 
+    if (
+      animationStopped &&
+      Math.abs(window.pageYOffset - aboutStartPosition) < 2
+    ) {
+      interval = setInterval(() => {
+        scrollSection(0.4);
+      }, 100);
+      animationStopped = false;
       globalState.changeState({
         ...globalState.getState(),
         allowScroll: false,

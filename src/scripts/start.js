@@ -15,7 +15,7 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
   };
-
+  const startSection = document.querySelector(".start");
   const contentLineEl = document.querySelector(".start__line--content");
   const downbarLineEl = document.querySelector(".start__line--downbar");
   const downbarTitleLineEl = document.querySelector(
@@ -38,6 +38,10 @@ window.addEventListener("DOMContentLoaded", () => {
   const downbarTitleContainerEl = document.querySelector(
     ".start__downbar__container--title"
   );
+
+  const sideIcons = document.querySelectorAll(".side-bar__icon");
+
+  let isIcons = false;
 
   setAnimation(contentLineEl, "add", "height-max", 1900);
   setAnimation(contentLineEl, "add", `start__line--active`, 2600); //-400
@@ -141,11 +145,10 @@ window.addEventListener("DOMContentLoaded", () => {
               document
                 .querySelector(".start__icon")
                 .classList.add("opacity-visible");
-
-              const children = document.querySelectorAll(".side-bar__icon");
-
-              for (let i = 0; i < children.length; i++) {
-                displayIcon(children[i], i);
+              if (!isIcons) {
+                for (let i = 0; i < sideIcons.length; i++) {
+                  displayIcon(sideIcons[i], i);
+                }
               }
             }, 150);
           }
@@ -159,4 +162,13 @@ window.addEventListener("DOMContentLoaded", () => {
       el.classList.add("side-bar__icon--intitial");
     }, index * 250);
   };
+
+  startSection.addEventListener("wheel", (e) => {
+    if (e.deltaY > 0 && !isIcons) {
+      isIcons = true;
+      for (let i = 0; i < sideIcons.length; i++) {
+        displayIcon(sideIcons[i], i);
+      }
+    }
+  });
 });
