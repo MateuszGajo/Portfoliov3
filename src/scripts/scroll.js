@@ -15,34 +15,45 @@ const scrollModule = (() => {
   return pub;
 })();
 
-setTimeout(function () {
-  window.scrollTo(0, 0);
-  globalState.changeState({ ...globalState.getState(), scrollBack: true });
+let stateCheck = setInterval(() => {
+  if (document.readyState === "complete") {
+    clearInterval(stateCheck);
+    window.scrollTo(0, 0);
+    globalState.changeState({ ...globalState.getState(), scrollBack: true });
+  }
 }, 100);
 
 const scrollDown = () => {
   const { scrollBlock } = scrollModule.getState();
-  const { windowHeight, scrollPosition } = globalState.getState();
-  console.log(windowHeight);
+  const {
+    windowHeight,
+    scrollPosition,
+    websiteHeight,
+  } = globalState.getState();
   if (!scrollBlock) {
     const newScrollPosition = scrollPosition + windowHeight;
-    window.scroll({
-      lastTouchPosition: 0,
-      top: newScrollPosition,
-      left: 0,
-      behavior: "smooth",
-    });
-    globalState.changeState({
-      ...globalState.getState(),
-      scrollPosition: newScrollPosition,
-    });
-    scrollModule.changeState({ ...scrollModule.getState(), scrollBlock: true });
-    setTimeout(() => {
+    if (newScrollPosition < websiteHeight) {
+      window.scroll({
+        lastTouchPosition: 0,
+        top: newScrollPosition,
+        left: 0,
+        behavior: "smooth",
+      });
+      globalState.changeState({
+        ...globalState.getState(),
+        scrollPosition: newScrollPosition,
+      });
       scrollModule.changeState({
         ...scrollModule.getState(),
-        scrollBlock: false,
+        scrollBlock: true,
       });
-    }, 500);
+      setTimeout(() => {
+        scrollModule.changeState({
+          ...scrollModule.getState(),
+          scrollBlock: false,
+        });
+      }, 500);
+    }
   }
 };
 
@@ -51,23 +62,27 @@ const scrollUp = () => {
   const { windowHeight, scrollPosition } = globalState.getState();
   if (!scrollBlock) {
     const newScrollPosition = scrollPosition - windowHeight;
-    console.log(windowHeight);
-    window.scroll({
-      top: newScrollPosition,
-      left: 0,
-      behavior: "smooth",
-    });
-    globalState.changeState({
-      ...globalState.getState(),
-      scrollPosition: newScrollPosition,
-    });
-    scrollModule.changeState({ ...scrollModule.getState(), scrollBlock: true });
-    setTimeout(() => {
+    if (newScrollPosition >= 0) {
+      window.scroll({
+        top: newScrollPosition,
+        left: 0,
+        behavior: "smooth",
+      });
+      globalState.changeState({
+        ...globalState.getState(),
+        scrollPosition: newScrollPosition,
+      });
       scrollModule.changeState({
         ...scrollModule.getState(),
-        scrollBlock: false,
+        scrollBlock: true,
       });
-    }, 500);
+      setTimeout(() => {
+        scrollModule.changeState({
+          ...scrollModule.getState(),
+          scrollBlock: false,
+        });
+      }, 500);
+    }
   }
 };
 

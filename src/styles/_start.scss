@@ -334,10 +334,6 @@
   .start__icon {
     font-size: 10rem;
   }
-
-  // .start__downbar__container--title {
-  //   margin-right: 99%;
-  // }
 }
 
 @media (max-width: 1023px) and (orientation: portrait) {
@@ -347,13 +343,13 @@
   }
 
   .start__title__container {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     margin-bottom: -3.2px;
     margin-right: -4px;
   }
 
   .start__line {
-    width: 4px;
+    width: 3px;
   }
 
   .start__content {
@@ -369,7 +365,7 @@
   }
 
   .start__downbar__text__line {
-    height: 4px;
+    height: 3px;
   }
 
   .start__line--downbar--active {
@@ -381,7 +377,7 @@
   }
 
   .start__downbar__container--move {
-    transform: translate(-20vw, -20vh) scale(1.5);
+    transform: translate(-20vw, -20vh) scale(2);
   }
 
   .start__downbar__container--move-away {

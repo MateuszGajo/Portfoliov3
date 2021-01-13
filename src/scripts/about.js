@@ -1,50 +1,51 @@
 import { globalState } from "./globalState";
 
-const { windowWidth, windowHeight } = globalState.getState();
-
-const topLeftTexts = document.querySelectorAll(
-  ".about__container__item--top-left .about__container__item__text"
-);
-const topRightTexts = document.querySelectorAll(
-  ".about__container__item--top-right .about__container__item__text"
-);
-const bottomLeftTexts = document.querySelectorAll(
-  ".about__container__item--bottom-left .about__container__item__text"
-);
-const bottomRightTexts = document.querySelectorAll(
-  ".about__container__item--bottom-right .about__container__item__text"
-);
-
-const max = (a, b, c, d) => {
-  const aL = a.length;
-  const bL = b.length;
-  const cL = c.length;
-  const dL = d.length;
-  if (aL > bL && aL > cL && aL > dL) return aL;
-  if (bL > cL && bL > dL) return bL;
-  if (cL > dL) return cL;
-  return dL;
-};
-
-const maxItem = max(
-  topLeftTexts,
-  topRightTexts,
-  bottomLeftTexts,
-  bottomRightTexts
-);
-
-const textsArray = [];
-
-for (let i = 0; i < maxItem; i++) {
-  if (topLeftTexts[i]) textsArray.push(topLeftTexts[i]);
-  if (bottomRightTexts[i]) textsArray.push(bottomRightTexts[i]);
-  if (topRightTexts[i]) textsArray.push(topRightTexts[i]);
-  if (bottomLeftTexts[i]) textsArray.push(bottomLeftTexts[i]);
-}
-
 window.addEventListener("DOMContentLoaded", () => {
+  const { windowWidth, windowHeight } = globalState.getState();
+
   const aboutSection = document.querySelector(".about");
+  const aboutContainer = document.querySelector(".about__container");
   const titleEl = document.querySelector(".about__title__text");
+
+  const topLeftTexts = document.querySelectorAll(
+    ".about__container__item--top-left .about__container__item__text"
+  );
+  const topRightTexts = document.querySelectorAll(
+    ".about__container__item--top-right .about__container__item__text"
+  );
+  const bottomLeftTexts = document.querySelectorAll(
+    ".about__container__item--bottom-left .about__container__item__text"
+  );
+  const bottomRightTexts = document.querySelectorAll(
+    ".about__container__item--bottom-right .about__container__item__text"
+  );
+
+  const max = (a, b, c, d) => {
+    const aL = a.length;
+    const bL = b.length;
+    const cL = c.length;
+    const dL = d.length;
+    if (aL > bL && aL > cL && aL > dL) return aL;
+    if (bL > cL && bL > dL) return bL;
+    if (cL > dL) return cL;
+    return dL;
+  };
+
+  const maxItem = max(
+    topLeftTexts,
+    topRightTexts,
+    bottomLeftTexts,
+    bottomRightTexts
+  );
+
+  const textsArray = [];
+
+  for (let i = 0; i < maxItem; i++) {
+    if (topLeftTexts[i]) textsArray.push(topLeftTexts[i]);
+    if (bottomRightTexts[i]) textsArray.push(bottomRightTexts[i]);
+    if (topRightTexts[i]) textsArray.push(topRightTexts[i]);
+    if (bottomLeftTexts[i]) textsArray.push(bottomLeftTexts[i]);
+  }
 
   const aboutStartPosition = aboutSection.offsetTop;
 
@@ -103,25 +104,25 @@ window.addEventListener("DOMContentLoaded", () => {
     },
     {
       cord: windowWidth / 30,
-      scale: 0.2,
+      scale: 0.05,
       index: 1,
       opacity: 0.1,
       xSign: "",
       ySign: "",
     },
     {
-      cord: -(windowWidth / 100) * 5,
-      scale: -0.25,
+      cord: -(windowWidth / 100) * 7,
+      scale: -0.35,
       index: 2,
-      opacity: -0.5,
+      opacity: -0.7,
       xSign: "",
       ySign: "-",
     },
     {
-      cord: -(windowWidth / 100) * 10,
-      scale: -0.5,
+      cord: -(windowWidth / 100) * 14,
+      scale: -0.7,
       index: 3,
-      opacity: -1,
+      opacity: -1.4,
       xSign: "-",
       ySign: "",
     },
@@ -184,24 +185,47 @@ window.addEventListener("DOMContentLoaded", () => {
           }px, ${ySign + cord}px)`;
 
           const elProp = textsArray[index].getBoundingClientRect();
+
           const topPositon = elProp.top;
           const bottomPosition = elProp.bottom;
+          const leftPosition = elProp.left;
+          const rightPosition = elProp.right;
           if (
             index === textsArray.length - 1 &&
-            (bottomPosition < 0 || topPositon > windowHeight)
+            (bottomPosition < 0 ||
+              topPositon > windowHeight ||
+              leftPosition + windowWidth < 0 ||
+              rightPosition > windowWidth * 2)
           ) {
-            console.log(index);
-            console.log("koniec");
+            const { windowHeight, scrollPosition } = globalState.getState();
+
+            aboutContainer.classList.add("about__container--active");
+
             globalState.changeState({
               ...globalState.getState(),
               allowScroll: true,
             });
+
             clearInterval(interval);
+
+            const newScrollPosition = scrollPosition + windowHeight;
+            window.scroll({
+              top: newScrollPosition,
+              left: 0,
+              behavior: "smooth",
+            });
+            globalState.changeState({
+              ...globalState.getState(),
+              scrollPosition: newScrollPosition,
+            });
           }
 
-          if (bottomPosition < 0 || topPositon > windowHeight) {
-            console.log(windowHeight);
-            console.log(bottomPosition, topPositon);
+          if (
+            bottomPosition < 0 ||
+            topPositon > windowHeight ||
+            leftPosition + windowWidth < 0 ||
+            rightPosition > windowWidth * 2
+          ) {
             opacity = 0.1;
             cord = 0;
             scale = 0.1;
@@ -222,7 +246,6 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
     if (titleScale < 14) {
-      console.log(titleScale);
       if (multiplier < 1) {
         titleScale = titleScale * 1.1;
       } else if (multiplier > 1) {

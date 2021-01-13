@@ -1,8 +1,11 @@
+import { globalState } from "./globalState";
+
 window.addEventListener("load", function () {
   const stateModule = (() => {
     let state = {
       transformProjectsPosition: 0,
       transformTitlePosition: 0,
+      startTouchPosition: 0,
       isScrollOn: true,
       touchStartX: 0,
     };
@@ -26,6 +29,9 @@ window.addEventListener("load", function () {
   const itemsWidth = items.offsetWidth;
   const windowWidth = window.innerWidth;
   const titleWidth = title.offsetWidth;
+
+  const projectsSectionPosition = projectsSection.offsetTop;
+
   const textTimes = Math.floor(itemsWidth / titleWidth);
   const text = "Projekty - ";
   title.innerHTML = text.repeat(textTimes) + "Projekty";
@@ -41,18 +47,43 @@ window.addEventListener("load", function () {
     const sizeOutOfScreen = itemsWidth - windowWidth + 100;
 
     if (direction === "left") {
-      if (transformProjectsPosition + distance < 0) {
+      if (transformProjectsPosition + distance < -50) {
         newTransformTitlePosition = transformTitlePosition + distance / 2;
         newTransformProjectsPosition = transformProjectsPosition + distance;
 
         title.style.transform = `translateX(${newTransformTitlePosition}px)`;
         items.style.transform = `translateX(${newTransformProjectsPosition}px)`;
       } else {
+        const { windowHeight, scrollPosition } = globalState.getState();
         title.style.transform = `translateX(0)`;
         items.style.transform = `translateX(0)`;
 
         newTransformTitlePosition = 0;
         newTransformProjectsPosition = 0;
+        setTimeout(() => {
+          globalState.changeState({
+            ...globalState.getState(),
+            allowScroll: true,
+          });
+        }, 500);
+
+        stateModule.changeState({
+          ...stateModule.getState(),
+          isScrollOn: true,
+        });
+
+        const newScrollPosition = scrollPosition - windowHeight;
+        window.scroll({
+          top: newScrollPosition,
+          left: 0,
+          behavior: "smooth",
+        });
+        globalState.changeState({
+          ...globalState.getState(),
+          scrollPosition: newScrollPosition,
+        });
+
+        scrollProject("off");
       }
     } else if (direction === "right") {
       if ((transformProjectsPosition - distance) * -1 < sizeOutOfScreen) {
@@ -109,17 +140,17 @@ window.addEventListener("load", function () {
 
   const scrollProject = (action) => {
     if (action === "on") {
-      addEventListener("wheel", handleWheelEvent);
-      addEventListener("touchstart", handleTouchStartEvent);
-      addEventListener("touchend", handleTouchEndEvent);
+      projectsSection.addEventListener("wheel", handleWheelEvent);
+      projectsSection.addEventListener("touchstart", handleTouchStartEvent);
+      projectsSection.addEventListener("touchend", handleTouchEndEvent);
       stateModule.changeState({
         ...stateModule.getState(),
         isScrollOn: false,
       });
     } else if (action === "off") {
-      removeEventListener("wheel", handleWheelEvent);
-      removeEventListener("touchstart", handleTouchStartEvent);
-      removeEventListener("touchend", handleTouchEndEvent);
+      projectsSection.removeEventListener("wheel", handleWheelEvent);
+      projectsSection.removeEventListener("touchstart", handleTouchStartEvent);
+      projectsSection.removeEventListener("touchend", handleTouchEndEvent);
       stateModule.changeState({
         ...stateModule.getState(),
         isScrollOn: true,
@@ -147,46 +178,71 @@ window.addEventListener("load", function () {
     }
   }
 
-  addEventListener("wheel", (e) => {
+  let supportsPassive = false;
+  try {
+    window.addEventListener(
+      "test",
+      null,
+      Object.defineProperty({}, "passive", {
+        get: function () {
+          supportsPassive = true;
+        },
+      })
+    );
+  } catch (e) {}
+
+  document.addEventListener("wheel", (e) => {
     const { transformProjectsPosition, isScrollOn } = stateModule.getState();
-    const distanceToSection = projectsSection.offsetTop - window.scrollY;
 
     if (
-      distanceToSection < window.innerHeight / 3 &&
       isScrollOn &&
-      e.deltaY > 0
+      e.deltaY > 0 &&
+      Math.abs(window.pageYOffset - projectsSectionPosition) < 2
     ) {
-      //   window.scroll({
-      //     top: projectsSection.offsetTop,
-      //     behavior: "smooth",
-      //   });
+      globalState.changeState({
+        ...globalState.getState(),
+        allowScroll: false,
+      });
+      scrollProject("on");
+      stateModule.changeState({
+        ...stateModule.getState(),
+        isScrollOn: false,
+      });
+    }
+  });
 
+  const touchStart = (e) => {
+    e.preventDefault();
+    const position = e.changedTouches[0].pageX;
+    stateModule.changeState({
+      ...stateModule.getState(),
+      startTouchPosition: position,
+    });
+  };
+
+  const touchEnd = (e) => {
+    e.preventDefault();
+    const { startTouchPosition, isScrollOn } = stateModule.getState();
+    const position = e.changedTouches[0].pageX;
+    const distance = position - startTouchPosition;
+    if (
+      isScrollOn &&
+      distance < 0 &&
+      Math.abs(window.pageYOffset - projectsSectionPosition) < 2
+    ) {
+      globalState.changeState({
+        ...globalState.getState(),
+        allowScroll: false,
+      });
       scrollProject("on");
 
       stateModule.changeState({
         ...stateModule.getState(),
-        transformProjectsPosition: 1,
+        isScrollOn: false,
       });
-
-      if (window.removeEventListener)
-        window.addEventListener("DOMMouseScroll", preventDefault, false);
-      document.addEventListener("wheel", preventDefault, {
-        passive: false,
-      });
-      window.onmousewheel = document.onmousewheel = preventDefault;
-      document.onkeydown = preventDefaultForScrollKeys;
-      document.querySelector("body").style.overflow = "hidden";
-    } else if (transformProjectsPosition === 0 && !isScrollOn) {
-      scrollProject("off");
-
-      if (window.removeEventListener)
-        window.removeEventListener("DOMMouseScroll", preventDefault, false);
-      document.removeEventListener("wheel", preventDefault, {
-        passive: false,
-      });
-      window.onmousewheel = document.onmousewheel = null;
-      document.onkeydown = null;
-      //   document.querySelector("body").style.overflow = "visible";
     }
-  });
+  };
+
+  projectsSection.addEventListener("touchstart", touchStart);
+  projectsSection.addEventListener("touchend", touchEnd);
 });
