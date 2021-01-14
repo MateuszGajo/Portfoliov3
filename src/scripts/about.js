@@ -265,7 +265,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const { scrollBack } = globalState.getState();
     const { isSectionStart } = aboutModule.getState();
     if (
-      Math.abs(window.pageYOffset - aboutStartPosition) < 2 &&
+      Math.abs(window.pageYOffset - aboutStartPosition) < 10 &&
       scrollBack &&
       !isSectionStart
     ) {
@@ -283,7 +283,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (
       animationStopped &&
-      Math.abs(window.pageYOffset - aboutStartPosition) < 2
+      Math.abs(window.pageYOffset - aboutStartPosition) < 10
     ) {
       interval = setInterval(() => {
         scrollSection(0.4);

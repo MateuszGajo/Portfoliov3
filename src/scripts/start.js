@@ -171,4 +171,20 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
+  let lastPos = 0;
+  const touchStart = (e) => {
+    lastPos = e.changedTouches[0].pageY;
+  };
+
+  const touchEnd = (e) => {
+    if (lastPos - e.changedTouches[0].pageY > 10 && !isIcons) {
+      isIcons = true;
+      for (let i = 0; i < sideIcons.length; i++) {
+        displayIcon(sideIcons[i], i);
+      }
+    }
+  };
+  startSection.addEventListener("touchstart", touchStart);
+  startSection.addEventListener("touchend", touchEnd);
 });

@@ -437,7 +437,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const { scrollBack } = globalState.getState();
 
     if (
-      Math.abs(window.pageYOffset - technologiesStart) < 2 &&
+      Math.abs(window.pageYOffset - technologiesStart) < 10 &&
       !isTechnologiesStart &&
       scrollBack
     ) {
@@ -452,7 +452,7 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     }
     if (
-      Math.abs(window.pageYOffset - descriptionStart) < 2 &&
+      Math.abs(window.pageYOffset - descriptionStart) < 10 &&
       !isDescriptionStart &&
       scrollBack
     ) {
@@ -463,7 +463,7 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     }
     if (
-      Math.abs(window.pageYOffset - technologiesStart) < 2 &&
+      Math.abs(window.pageYOffset - technologiesStart) < 10 &&
       animationStarted &&
       !animationEnded
     ) {

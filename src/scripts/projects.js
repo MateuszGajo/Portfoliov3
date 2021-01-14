@@ -71,8 +71,9 @@ window.addEventListener("load", function () {
           ...stateModule.getState(),
           isScrollOn: true,
         });
-
+        console.log("koniec, scroll do góry");
         const newScrollPosition = scrollPosition - windowHeight;
+        console.log(newScrollPosition);
         window.scroll({
           top: newScrollPosition,
           left: 0,
@@ -89,12 +90,13 @@ window.addEventListener("load", function () {
       if ((transformProjectsPosition - distance) * -1 < sizeOutOfScreen) {
         newTransformTitlePosition = transformTitlePosition - distance / 2;
         newTransformProjectsPosition = transformProjectsPosition - distance;
-
+        console.log(newTransformProjectsPosition);
         title.style.transform = `translateX(${newTransformTitlePosition}px)`;
         items.style.transform = `translateX(${newTransformProjectsPosition}px)`;
       } else {
         newTransformTitlePosition = transformTitlePosition;
         newTransformProjectsPosition = -sizeOutOfScreen;
+        console.log(newTransformProjectsPosition);
       }
     }
     stateModule.changeState({
@@ -158,47 +160,14 @@ window.addEventListener("load", function () {
     }
   };
 
-  function preventDefault(e) {
-    e = e || window.event;
-    if (e.preventDefault) e.preventDefault();
-    e.returnValue = false;
-  }
-
-  const keys = {
-    37: 1,
-    38: 1,
-    39: 1,
-    40: 1,
-  };
-
-  function preventDefaultForScrollKeys(e) {
-    if (keys[e.keyCode]) {
-      preventDefault(e);
-      return false;
-    }
-  }
-
-  let supportsPassive = false;
-  try {
-    window.addEventListener(
-      "test",
-      null,
-      Object.defineProperty({}, "passive", {
-        get: function () {
-          supportsPassive = true;
-        },
-      })
-    );
-  } catch (e) {}
-
-  document.addEventListener("wheel", (e) => {
-    const { transformProjectsPosition, isScrollOn } = stateModule.getState();
-
+  document.addEventListener("scroll", (e) => {
+    const { isScrollOn } = stateModule.getState();
+    const { scrollPosition } = globalState.getState();
     if (
       isScrollOn &&
-      e.deltaY > 0 &&
-      Math.abs(window.pageYOffset - projectsSectionPosition) < 2
+      Math.abs(window.pageYOffset - projectsSectionPosition) < 10
     ) {
+      moveProjects("right", 30);
       globalState.changeState({
         ...globalState.getState(),
         allowScroll: false,
@@ -211,38 +180,11 @@ window.addEventListener("load", function () {
     }
   });
 
-  const touchStart = (e) => {
-    e.preventDefault();
-    const position = e.changedTouches[0].pageX;
-    stateModule.changeState({
-      ...stateModule.getState(),
-      startTouchPosition: position,
-    });
-  };
-
-  const touchEnd = (e) => {
-    e.preventDefault();
-    const { startTouchPosition, isScrollOn } = stateModule.getState();
-    const position = e.changedTouches[0].pageX;
-    const distance = position - startTouchPosition;
-    if (
-      isScrollOn &&
-      distance < 0 &&
-      Math.abs(window.pageYOffset - projectsSectionPosition) < 2
-    ) {
-      globalState.changeState({
-        ...globalState.getState(),
-        allowScroll: false,
-      });
-      scrollProject("on");
-
-      stateModule.changeState({
-        ...stateModule.getState(),
-        isScrollOn: false,
-      });
-    }
-  };
-
-  projectsSection.addEventListener("touchstart", touchStart);
-  projectsSection.addEventListener("touchend", touchEnd);
+  projectsSection.addEventListener(
+    "touchmove",
+    function (e) {
+      e.preventDefault();
+    },
+    { passive: false }
+  );
 });
