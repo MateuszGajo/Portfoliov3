@@ -71,9 +71,7 @@ window.addEventListener("load", function () {
           ...stateModule.getState(),
           isScrollOn: true,
         });
-        console.log("koniec, scroll do góry");
         const newScrollPosition = scrollPosition - windowHeight;
-        console.log(newScrollPosition);
         window.scroll({
           top: newScrollPosition,
           left: 0,
@@ -90,13 +88,11 @@ window.addEventListener("load", function () {
       if ((transformProjectsPosition - distance) * -1 < sizeOutOfScreen) {
         newTransformTitlePosition = transformTitlePosition - distance / 2;
         newTransformProjectsPosition = transformProjectsPosition - distance;
-        console.log(newTransformProjectsPosition);
         title.style.transform = `translateX(${newTransformTitlePosition}px)`;
         items.style.transform = `translateX(${newTransformProjectsPosition}px)`;
       } else {
         newTransformTitlePosition = transformTitlePosition;
         newTransformProjectsPosition = -sizeOutOfScreen;
-        console.log(newTransformProjectsPosition);
       }
     }
     stateModule.changeState({

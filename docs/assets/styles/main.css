@@ -856,75 +856,56 @@ a {
 .about__container__item--bottom-right .about__container__item__text {
   align-items: flex-start; }
 
-.about__container--active
-.about__container__item--top-left
-.about__container__item__text:nth-child(1) {
-  animation-name: animTopLeftFirstWave;
+.about__container--active .about__container__item__text {
   animation-duration: 10s;
   animation-iteration-count: infinite;
   animation-timing-function: cubic-bezier(0.97, 0.54, 0.96, 0.76); }
 
 .about__container--active
 .about__container__item--top-left
+.about__container__item__text:nth-child(1) {
+  animation-name: animTopLeftFirstWave; }
+
+.about__container--active
+.about__container__item--top-left
 .about__container__item__text:nth-child(2) {
-  animation-name: animTopLeftSecondWave;
-  animation-duration: 10s;
-  animation-iteration-count: infinite;
-  animation-timing-function: cubic-bezier(0.97, 0.54, 0.96, 0.76); }
+  animation-name: animTopLeftSecondWave; }
 
 .about__container--active
 .about__container__item--top-right
 .about__container__item__text:nth-child(1) {
   animation-name: animTopRightFirstWave;
-  animation-duration: 10s;
-  animation-delay: 2.5s;
-  animation-iteration-count: infinite;
-  animation-timing-function: cubic-bezier(0.97, 0.54, 0.96, 0.76); }
+  animation-delay: 2.5s; }
 
 .about__container--active
 .about__container__item--top-right
 .about__container__item__text:nth-child(2) {
   animation-name: animTopRightSecondWave;
-  animation-duration: 10s;
-  animation-delay: 2.5s;
-  animation-iteration-count: infinite;
-  animation-timing-function: cubic-bezier(0.97, 0.54, 0.96, 0.76); }
+  animation-delay: 2.5s; }
 
 .about__container--active
 .about__container__item--bottom-left
 .about__container__item__text:nth-child(1) {
   animation-name: animBottomLeftFirstWave;
-  animation-duration: 10s;
-  animation-delay: 3.75s;
-  animation-iteration-count: infinite;
-  animation-timing-function: cubic-bezier(0.97, 0.54, 0.96, 0.76); }
+  animation-delay: 3.75s; }
 
 .about__container--active
 .about__container__item--bottom-left
 .about__container__item__text:nth-child(2) {
   animation-name: animBottomLeftSecondWave;
-  animation-duration: 10s;
-  animation-delay: 3.75s;
-  animation-iteration-count: infinite;
-  animation-timing-function: cubic-bezier(0.97, 0.54, 0.96, 0.76); }
+  animation-delay: 3.75s; }
 
 .about__container--active
 .about__container__item--bottom-right
 .about__container__item__text:nth-child(1) {
   animation-name: animBottomRightFirstWave;
-  animation-duration: 10s;
-  animation-delay: 1.25s;
-  animation-iteration-count: infinite;
-  animation-timing-function: cubic-bezier(0.97, 0.54, 0.96, 0.76); }
+  animation-delay: 1.25s; }
 
 .about__container--active
 .about__container__item--bottom-right
 .about__container__item__text:nth-child(2) {
   animation-name: animBottomRightSecondWave;
-  animation-duration: 10s;
-  animation-delay: 1.25s;
-  animation-iteration-count: infinite;
-  animation-timing-function: cubic-bezier(0.97, 0.54, 0.96, 0.76); }
+  animation-delay: 1.25s; }
 
 .about__container__item__text {
   display: flex;

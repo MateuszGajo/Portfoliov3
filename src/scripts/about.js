@@ -53,6 +53,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let state = {
       isSectionStart: false,
       lastTouchPosition: 0,
+      skippedAnimation: false,
     };
 
     const pub = {};
@@ -263,7 +264,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let interval;
   document.addEventListener("scroll", () => {
     const { scrollBack } = globalState.getState();
-    const { isSectionStart } = aboutModule.getState();
+    const { isSectionStart, skippedAnimation } = aboutModule.getState();
     if (
       Math.abs(window.pageYOffset - aboutStartPosition) < 10 &&
       scrollBack &&
@@ -275,38 +276,57 @@ window.addEventListener("DOMContentLoaded", () => {
       });
       startSection();
       setTimeout(() => {
-        interval = setInterval(() => {
-          scrollSection(0.4);
-        }, 100);
+        if (!skippedAnimation) {
+          interval = setInterval(() => {
+            scrollSection(0.4);
+          }, 100);
+        }
       }, 800);
     }
 
-    if (
-      animationStopped &&
-      Math.abs(window.pageYOffset - aboutStartPosition) < 10
-    ) {
-      interval = setInterval(() => {
-        scrollSection(0.4);
-      }, 100);
-      animationStopped = false;
-      globalState.changeState({
-        ...globalState.getState(),
-        allowScroll: false,
-      });
-      document.addEventListener("wheel", (e) => {
-        scrollSection(1);
-      });
-      document.addEventListener("touchstart", (e) => {
-        aboutModule.changeState({
-          ...aboutModule.getState(),
-          lastTouchPosition: e.changedTouches[0].pageY,
-        });
-      });
-      document.addEventListener("touchend", (e) => {
-        const { lastTouchPosition } = aboutModule.getState();
-        if (Math.abs(lastTouchPosition - e.changedTouches[0].pageY) > 50)
-          scrollSection(2);
+    // if (
+    //   animationStopped &&
+    //   Math.abs(window.pageYOffset - aboutStartPosition) < 10
+    // ) {
+    //   interval = setInterval(() => {
+    //     scrollSection(0.4);
+    //   }, 100);
+    //   animationStopped = false;
+    //   globalState.changeState({
+    //     ...globalState.getState(),
+    //     allowScroll: false,
+    //   });
+    //   document.addEventListener("wheel", (e) => {
+    //     scrollSection(1);
+    //   });
+    //   document.addEventListener("touchstart", (e) => {
+    //     aboutModule.changeState({
+    //       ...aboutModule.getState(),
+    //       lastTouchPosition: e.changedTouches[0].pageY,
+    //     });
+    //   });
+    //   document.addEventListener("touchend", (e) => {
+    //     const { lastTouchPosition } = aboutModule.getState();
+    //     if (Math.abs(lastTouchPosition - e.changedTouches[0].pageY) > 50)
+    //       scrollSection(2);
+    //   });
+    // }
+  });
+
+  const wheelSkipSection = () => {
+    const { animationStopped } = aboutModule.getState();
+    if (!animationStopped) {
+      setTimeout(() => {
+        clearInterval(interval);
+        aboutContainer.classList.add("about__container--active");
+        titleEl.style.opacity = 0;
+      }, 250);
+      aboutModule.changeState({
+        ...aboutModule.getState(),
+        skippedAnimation: true,
       });
     }
-  });
+  };
+
+  aboutSection.addEventListener("wheel", wheelSkipSection);
 });
