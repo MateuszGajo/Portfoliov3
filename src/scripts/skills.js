@@ -218,13 +218,16 @@ window.addEventListener("DOMContentLoaded", () => {
       );
       const { scrollPosition } = globalState.getState();
       const { skippedAnimation } = skillsModule.getState();
-      if (scrollPosition === technologiesStart && !skippedAnimation) {
+      if (
+        Math.abs(scrollPosition - technologiesStart) < 10 &&
+        !skippedAnimation
+      ) {
         const autoScroll = setInterval(() => {
           technologiesEl.scrollBy({
-            top: 13,
+            top: 19,
             behavior: "smooth",
           });
-        }, 70);
+        }, 90);
         skillsModule.changeState({
           ...skillsModule.getState(),
           autoScroll,
@@ -241,7 +244,6 @@ window.addEventListener("DOMContentLoaded", () => {
       const { scrollPosition } = globalState.getState();
       const { skippedAnimation } = skillsModule.getState();
       if (scrollPosition === technologiesStart && !skippedAnimation) {
-        console.log("blokujemy scrolla");
         globalState.changeState({
           ...globalState.getState(),
           allowScroll: false,
@@ -272,7 +274,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     if (isUserScroll) {
-      console.log("clear");
       clearInterval(autoScroll);
       skillsModule.changeState({
         ...skillsModule.getState(),
@@ -291,6 +292,7 @@ window.addEventListener("DOMContentLoaded", () => {
     e,
     isUserScroll,
     autoScroll,
+    skippedAnimation,
   }) => {
     const { animationEnded } = skillsModule.getState();
     const { windowHeight, scrollPosition } = globalState.getState();
@@ -327,39 +329,46 @@ window.addEventListener("DOMContentLoaded", () => {
           });
 
           setTimeout(() => {
-            globalState.changeState({
-              ...globalState.getState(),
-              allowScroll: true,
-            });
-            const newScrollPosition = scrollPosition + windowHeight;
-            window.scroll({
-              top: newScrollPosition,
-              left: 0,
-              behavior: "smooth",
-            });
-            globalState.changeState({
-              ...globalState.getState(),
-              scrollPosition: newScrollPosition,
-            });
-            skillsModule.changeState({
-              ...skillsModule.getState(),
-              skippedAnimation: true,
-            });
-            setTimeout(() => {
-              console.log("clear");
-
-              technologiesEl.scrollTo(0, 0);
-              technologiesLineOverlay.style.height = 0 + "px";
-              techonologiesLine.style.height = 0 + "px";
-              skillsItemsSorted.forEach((item) => {
-                item.classList.remove(
+            if (!skippedAnimation) {
+              globalState.changeState({
+                ...globalState.getState(),
+                allowScroll: true,
+              });
+              const newScrollPosition = scrollPosition + windowHeight;
+              window.scroll({
+                top: newScrollPosition,
+                left: 0,
+                behavior: "smooth",
+              });
+              globalState.changeState({
+                ...globalState.getState(),
+                scrollPosition: newScrollPosition,
+              });
+              skillsModule.changeState({
+                ...skillsModule.getState(),
+                skippedAnimation: true,
+              });
+              setTimeout(() => {
+                technologiesEl.scrollTo(0, 0);
+                technologiesLineOverlay.style.height =
+                  windowHeight / 2 -
+                  skillsItemsSorted[0].offsetHeight / 2 +
+                  windowHeight / 3 +
+                  "px";
+                techonologiesLine.style.height = windowHeight / 1.2 + "px";
+                skillsItemsSorted.forEach((item) => {
+                  item.classList.remove(
+                    "skills__technologies__wrapper__container--active"
+                  );
+                  item.classList.remove(
+                    "skills__technologies__wrapper__container--deactive"
+                  );
+                });
+                skillsItemsSorted[0].classList.add(
                   "skills__technologies__wrapper__container--active"
                 );
-                item.classList.remove(
-                  "skills__technologies__wrapper__container--deactive"
-                );
-              });
-            }, 250);
+              }, 250);
+            }
           }, 1500);
         } else technologiesLineOverlay.style.height = newScrollPosition + "px";
 
@@ -429,10 +438,10 @@ window.addEventListener("DOMContentLoaded", () => {
         );
         const autoScroll = setInterval(() => {
           technologiesEl.scrollBy({
-            top: 13,
+            top: 19,
             behavior: "smooth",
           });
-        }, 70);
+        }, 90);
         skillsModule.changeState({ ...skillsModule.getState(), autoScroll });
       }, 1200);
       skillsModule.changeState({
@@ -455,14 +464,19 @@ window.addEventListener("DOMContentLoaded", () => {
       autoScrollTimeout,
       autoScroll,
       stoppedAnimation,
+      skippedAnimation,
     } = skillsModule.getState();
-    // console.log("przed rysowaniem console");
     if (!stoppedAnimation) {
-      console.log("tutaj powinno rysowac");
       const scrollCenter = windowHeight / 2 + e.target.scrollTop;
       const lastElementPosition = skillsItemsSorted[last - 1].offsetTop;
 
-      clearAsyncFun({ animation, isUserScroll, autoScrollTimeout, autoScroll });
+      if (!skippedAnimation)
+        clearAsyncFun({
+          animation,
+          isUserScroll,
+          autoScrollTimeout,
+          autoScroll,
+        });
 
       scrollSection({
         scrollCenter,
@@ -473,11 +487,13 @@ window.addEventListener("DOMContentLoaded", () => {
         e,
         isUserScroll,
         autoScroll,
+        skippedAnimation,
       });
 
       hidenLastElement({ i, scrollCenter });
 
-      addInterval({ isUserScroll, scrollCenter, lastElementPosition });
+      if (!skippedAnimation)
+        addInterval({ isUserScroll, scrollCenter, lastElementPosition });
     }
   });
 
@@ -485,11 +501,11 @@ window.addEventListener("DOMContentLoaded", () => {
     const {
       isTechnologiesStart,
       isDescriptionStart,
+      skippedAnimation,
       animationStarted,
-      animationEnded,
       autoScroll,
     } = skillsModule.getState();
-    const { scrollBack } = globalState.getState();
+    const { scrollBack, scrollPosition } = globalState.getState();
 
     if (
       Math.abs(window.pageYOffset - technologiesStart) < 10 &&
@@ -517,35 +533,40 @@ window.addEventListener("DOMContentLoaded", () => {
         isDescriptionStart: true,
       });
     }
+
     if (
       Math.abs(window.pageYOffset - technologiesStart) < 10 &&
       !autoScroll &&
-      animationStarted
+      skippedAnimation &&
+      scrollPosition === windowHeight
     ) {
-      console.log("wchodzimy do intervalu");
-      const autoScroll = setInterval(() => {
-        technologiesEl.scrollBy({
-          top: 13,
-          behavior: "smooth",
+      setTimeout(() => {
+        techonologiesLine.classList.remove(
+          "skills__technologies__line--tranistion"
+        );
+        const autoScroll = setInterval(() => {
+          technologiesEl.scrollBy({
+            top: 19,
+            behavior: "smooth",
+          });
+        }, 90);
+        skillsModule.changeState({
+          ...skillsModule.getState(),
+          autoScroll,
         });
-      }, 70);
+      }, 200);
 
       skillsModule.changeState({
         ...skillsModule.getState(),
-        autoScroll,
+        autoScroll: 1,
         stoppedAnimation: false,
+        animationEnded: false,
       });
     }
   });
 
   const wheelSkipSection = () => {
-    const {
-      skippedAnimation,
-      autoScroll,
-      animationStarted,
-    } = skillsModule.getState();
-    console.log("Czy moemy wyzerowac");
-    console.log(skippedAnimation);
+    const { skippedAnimation, animationStarted } = skillsModule.getState();
     if (!skippedAnimation && !animationStarted) {
       skillsModule.changeState({
         ...skillsModule.getState(),
@@ -559,11 +580,13 @@ window.addEventListener("DOMContentLoaded", () => {
         autoScroll: null,
       });
       setTimeout(() => {
-        console.log("clear");
-
         technologiesEl.scrollTo(0, 0);
-        technologiesLineOverlay.style.height = 0 + "px";
-        techonologiesLine.style.height = 0 + "px";
+        technologiesLineOverlay.style.height =
+          windowHeight / 2 -
+          skillsItemsSorted[0].offsetHeight / 2 +
+          windowHeight / 3 +
+          "px";
+        techonologiesLine.style.height = windowHeight / 1.2 + "px";
         skillsItemsSorted.forEach((item) => {
           item.classList.remove(
             "skills__technologies__wrapper__container--active"
@@ -572,16 +595,18 @@ window.addEventListener("DOMContentLoaded", () => {
             "skills__technologies__wrapper__container--deactive"
           );
         });
+        skillsItemsSorted[0].classList.add(
+          "skills__technologies__wrapper__container--active"
+        );
         skillsModule.changeState({
           ...skillsModule.getState(),
           i: 0,
-          autoScroll: null,
           stoppedAnimation: true,
         });
-      }, 250);
+      }, 300);
     }
   };
 
   skillsSection.addEventListener("wheel", wheelSkipSection);
-  skillsSection.addEventListener("touchmove", wheelSkipSection);
+  technologiesEl.addEventListener("touchmove", wheelSkipSection);
 });

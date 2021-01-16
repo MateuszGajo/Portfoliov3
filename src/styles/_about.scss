@@ -90,6 +90,7 @@
   animation-duration: 10s;
   animation-iteration-count: infinite;
   animation-timing-function: cubic-bezier(0.97, 0.54, 0.96, 0.76);
+  animation-fill-mode: forwards;
 }
 
 .about__container--active
@@ -176,6 +177,9 @@
   50% {
     transform: translate(-100%, -100%) scale(2);
   }
+  100% {
+    transform: translate(-100%, -100%) scale(2);
+  }
 }
 
 @keyframes animTopLeftSecondWave {
@@ -204,6 +208,9 @@
     opacity: 1;
   }
   50% {
+    transform: translate(100%, -100%) scale(2);
+  }
+  100% {
     transform: translate(100%, -100%) scale(2);
   }
 }

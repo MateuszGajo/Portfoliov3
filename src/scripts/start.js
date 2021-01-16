@@ -1,3 +1,5 @@
+import { globalState } from "./globalState";
+
 window.addEventListener("DOMContentLoaded", () => {
   const setAnimation = (el, type, className, time = 0) => {
     switch (type) {
@@ -146,9 +148,22 @@ window.addEventListener("DOMContentLoaded", () => {
                 .querySelector(".start__icon")
                 .classList.add("opacity-visible");
               if (!isIcons) {
+                const { windowHeight, scrollPosition } = globalState.getState();
                 for (let i = 0; i < sideIcons.length; i++) {
                   displayIcon(sideIcons[i], i);
                 }
+                setTimeout(() => {
+                  const newScrollPosition = scrollPosition + windowHeight;
+                  window.scroll({
+                    top: newScrollPosition,
+                    left: 0,
+                    behavior: "smooth",
+                  });
+                  globalState.changeState({
+                    ...globalState.getState(),
+                    scrollPosition: newScrollPosition,
+                  });
+                }, sideIcons.length * 250 + 1000);
               }
             }, 150);
           }

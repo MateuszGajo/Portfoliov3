@@ -81,7 +81,6 @@ window.addEventListener("load", function () {
           ...globalState.getState(),
           scrollPosition: newScrollPosition,
         });
-
         scrollProject("off");
       }
     } else if (direction === "right") {
@@ -161,7 +160,8 @@ window.addEventListener("load", function () {
     const { scrollPosition } = globalState.getState();
     if (
       isScrollOn &&
-      Math.abs(window.pageYOffset - projectsSectionPosition) < 10
+      Math.abs(window.pageYOffset - projectsSectionPosition) < 10 &&
+      Math.abs(scrollPosition - projectsSectionPosition) < 10
     ) {
       moveProjects("right", 30);
       globalState.changeState({
