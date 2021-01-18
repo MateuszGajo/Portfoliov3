@@ -1,8 +1,7 @@
 .projects {
   position: relative;
-  position: sticky;
   height: 100vh;
-  background-color: #1f1f1d;
+  background-color: $secondaryBackground;
   overflow: hidden;
 }
 
@@ -16,10 +15,8 @@
 }
 
 .projects__items__info {
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  color: $primaryColor;
+  @include flex(center, center);
   margin-left: 30px;
   text-align: center;
 }
@@ -31,9 +28,7 @@
 
 .projects__items__item {
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flex(center, center);
   margin-left: 100px;
   transition: 0.2s ease-in-out;
   border: solid 22px transparent;
@@ -42,9 +37,7 @@
 .projects__items__item__desktop {
   box-sizing: content-box;
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flex(center, center);
   width: auto;
   height: 100%;
   border: solid grey 22px;
@@ -56,8 +49,7 @@
     position: absolute;
     content: "";
     display: block;
-    width: 100%;
-    height: 100%;
+    @extend %parent-size;
     border-radius: 50px;
     border: solid black 20px;
     z-index: 3;
@@ -74,9 +66,7 @@
   top: -20px;
   left: 0;
   z-index: 3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flex(center, center);
   width: 100%;
   height: 0;
   visibility: hidden;
@@ -86,26 +76,23 @@
 }
 
 .projects__items__item__desktop__shorts__icons {
-  display: flex;
+  @include flex(space-around, normal);
   width: 100%;
-  justify-content: space-around;
 }
 
 .projects__items__item__desktop__shorts__icons__a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flex(center, center);
   height: 70px;
   width: 200px;
-  background-color: #c89d9d;
+  background-color: $primaryColor;
   text-decoration: none;
-  color: #f5eaea;
+  color: $primaryTextColor;
   font-size: 1.5rem;
   letter-spacing: 2px;
   transition: 0.2s;
 
   &:hover {
-    background-color: #b48d8d;
+    background-color: $primaryColorShadow;
     font-size: 1.6rem;
   }
 }
@@ -120,10 +107,8 @@
 .projects__items__item__mobile {
   box-sizing: content-box;
   position: relative;
-  display: flex;
+  @include flex(center, center);
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   height: 70%;
   margin-left: 30px;
   border: solid grey 11px;
@@ -134,8 +119,7 @@
     box-sizing: content-box;
     position: absolute;
     display: block;
-    height: 100%;
-    width: 100%;
+    @extend %parent-size;
     border: solid black 10px;
     border-radius: 20px;
   }
@@ -168,22 +152,18 @@
 }
 
 .projects__items__item__mobile__shorts__icons {
-  display: flex;
+  @include flex(center, center);
   flex-direction: column;
   width: 100%;
-  justify-content: center;
-  align-items: center;
 }
 
 .projects__items__item__mobile__shorts__icons__a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flex(center, center);
   height: 50px;
   width: 150px;
-  background-color: #c89d9d;
+  background-color: $primaryColor;
   text-decoration: none;
-  color: #f5eaea;
+  color: $primaryTextColor;
   font-size: 1.5rem;
   letter-spacing: 2px;
   transition: 0.2s;
@@ -195,9 +175,7 @@
 }
 
 .projects__items__item__mobile__downbar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flex(center, center);
 }
 
 .projects__items__item__mobile__downbar__circle {
@@ -217,7 +195,7 @@
 }
 
 .projects__items__item__info__text-primary {
-  color: white;
+  color: $primaryTextColor;
   font-size: 3rem;
   font-weight: bold;
 }
