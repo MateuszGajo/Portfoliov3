@@ -15,15 +15,15 @@
 }
 
 .projects__items__info {
-  color: $primaryColor;
   @include flex(center, center);
-  margin-left: 30px;
+  margin-left: 50px;
   text-align: center;
 }
 
 .projects__items__info__h1 {
-  font-size: 2rem;
+  font-size: 3rem;
   font-weight: bold;
+  color: $primaryTextColor;
 }
 
 .projects__items__item {
@@ -196,11 +196,13 @@
 
 .projects__items__item__info__text-primary {
   color: $primaryTextColor;
+  text-align: center;
   font-size: 3rem;
   font-weight: bold;
 }
 
 .projects__items__item__info__text-secondary {
+  text-align: center;
   color: grey;
   font-size: 2rem;
 }

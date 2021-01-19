@@ -1,5 +1,6 @@
 .side-bar {
-  @include flex(column, normal);
+  @include flex(center, center);
+  flex-direction: column;
   position: fixed;
   top: 50%;
   right: 10px;

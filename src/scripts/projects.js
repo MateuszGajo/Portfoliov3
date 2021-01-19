@@ -33,8 +33,8 @@ window.addEventListener("load", function () {
   const projectsSectionPosition = projectsSection.offsetTop;
 
   const textTimes = Math.floor(itemsWidth / titleWidth);
-  const text = "Projekty - ";
-  title.innerHTML = text.repeat(textTimes) + "Projekty";
+  const text = "Projects - ";
+  title.innerHTML = text.repeat(textTimes) + "Projects";
 
   const moveProjects = (direction, distance) => {
     const {

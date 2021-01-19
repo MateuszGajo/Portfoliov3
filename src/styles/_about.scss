@@ -230,6 +230,9 @@
   50% {
     transform: translate(-100%, 100%) scale(2);
   }
+  100% {
+    transform: translate(-100%, 100%) scale(2);
+  }
 }
 
 @keyframes animBottomLeftSecondWave {
@@ -258,6 +261,9 @@
     opacity: 1;
   }
   50% {
+    transform: translate(100%, 100%) scale(2);
+  }
+  100% {
     transform: translate(100%, 100%) scale(2);
   }
 }
