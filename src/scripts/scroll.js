@@ -25,11 +25,8 @@ let stateCheck = setInterval(() => {
 
 const scrollDown = () => {
   const { scrollBlock } = scrollModule.getState();
-  const {
-    windowHeight,
-    scrollPosition,
-    websiteHeight,
-  } = globalState.getState();
+  const { windowHeight, scrollPosition, websiteHeight } =
+    globalState.getState();
   if (!scrollBlock) {
     const newScrollPosition = scrollPosition + windowHeight;
     if (newScrollPosition < websiteHeight) {
@@ -89,7 +86,12 @@ const scrollUp = () => {
 const checkScrollDirection = (e) => {
   const { allowScroll } = globalState.getState();
   if (allowScroll) {
-    if (e.wheelDelta > 0) {
+    let wheelDelta = e.wheelDelta;
+    if (!wheelDelta) {
+      wheelDelta = -e.deltaY;
+    }
+    console.log(wheelDelta);
+    if (wheelDelta > 0) {
       scrollUp();
     } else {
       scrollDown();

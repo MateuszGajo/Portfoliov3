@@ -169,6 +169,10 @@
   transition: color 0.2s 0.9s;
 }
 
+.skills__technologies__wrapper__container__item__container__hexagon__icon--text {
+  font-size: 3.5rem;
+}
+
 .skills__technologies__wrapper__container__item__container__hexagon__element {
   position: absolute;
   width: 4px;
@@ -374,6 +378,10 @@
     font-size: 4.5rem;
   }
 
+  .skills__technologies__wrapper__container__item__container__hexagon__icon--text {
+    font-size: 2.6rem;
+  }
+
   .skills__technologies__wrapper__container__point {
     right: -1.5px;
   }
@@ -428,6 +436,10 @@
 
   .skills__technologies__wrapper__container__item__container__hexagon__icon {
     font-size: 3.5rem;
+  }
+
+  .skills__technologies__wrapper__container__item__container__hexagon__icon--text {
+    font-size: 2.1rem;
   }
 
   .skills__technologies__wrapper__container__point {

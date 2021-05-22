@@ -46,7 +46,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let isIcons = false;
 
   setAnimation(contentLineEl, "add", "height-max", 1900);
-  setAnimation(contentLineEl, "add", `start__line--active`, 2600); //-400
+  setAnimation(contentLineEl, "add", `start__line--active`, 2600);
   setAnimation(downbarLineEl, "add", "start__line--downbar--active", 2700);
   setAnimation(
     downbarTitleLineEl,
@@ -67,7 +67,7 @@ window.addEventListener("DOMContentLoaded", () => {
     downbarTitleLineEl,
     "add",
     "start__downbar__text__line--active",
-    3500
+    3550
   );
   setAnimation(
     downbarAuthorLineEl,
@@ -120,7 +120,7 @@ window.addEventListener("DOMContentLoaded", () => {
         );
         return shuffle;
       })(),
-      9
+      1
     );
 
     setTimeout(() => {
@@ -169,7 +169,7 @@ window.addEventListener("DOMContentLoaded", () => {
           }
         };
       }
-    }, time * 250);
+    }, time * 200);
   };
 
   const displayIcon = (el, index) => {

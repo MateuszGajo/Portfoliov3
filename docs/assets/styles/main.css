@@ -47,6 +47,20 @@ a {
   transform: translateY(-50%);
   z-index: 10; }
 
+.language-button {
+  position: fixed;
+  top: 0.5rem;
+  right: 0.5rem;
+  height: 2rem;
+  z-index: 10;
+  cursor: pointer; }
+
+.language-button__image {
+  display: flex;
+  height: 100%;
+  width: auto;
+  object-fit: cover; }
+
 .side-bar__icon {
   color: #c89d9d;
   font-size: 3rem;
@@ -534,6 +548,9 @@ a {
   color: #2a2a27;
   transition: color 0.2s 0.9s; }
 
+.skills__technologies__wrapper__container__item__container__hexagon__icon--text {
+  font-size: 3.5rem; }
+
 .skills__technologies__wrapper__container__item__container__hexagon__element {
   position: absolute;
   width: 4px;
@@ -674,6 +691,8 @@ a {
     height: 68px; }
   .skills__technologies__wrapper__container__item__container__hexagon__icon {
     font-size: 4.5rem; }
+  .skills__technologies__wrapper__container__item__container__hexagon__icon--text {
+    font-size: 2.6rem; }
   .skills__technologies__wrapper__container__point {
     right: -1.5px; }
   .skills__technologies__line {
@@ -705,6 +724,8 @@ a {
     height: 51px; }
   .skills__technologies__wrapper__container__item__container__hexagon__icon {
     font-size: 3.5rem; }
+  .skills__technologies__wrapper__container__item__container__hexagon__icon--text {
+    font-size: 2.1rem; }
   .skills__technologies__wrapper__container__point {
     right: -1px; }
   .skills__technologies__line {
