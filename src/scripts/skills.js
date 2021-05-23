@@ -224,10 +224,10 @@ window.addEventListener("DOMContentLoaded", () => {
       ) {
         const autoScroll = setInterval(() => {
           technologiesEl.scrollBy({
-            top: 19,
+            top: 36,
             behavior: "smooth",
           });
-        }, 90);
+        }, 50);
         skillsModule.changeState({
           ...skillsModule.getState(),
           autoScroll,
@@ -438,10 +438,10 @@ window.addEventListener("DOMContentLoaded", () => {
         );
         const autoScroll = setInterval(() => {
           technologiesEl.scrollBy({
-            top: 19,
+            top: 36,
             behavior: "smooth",
           });
-        }, 90);
+        }, 50);
         skillsModule.changeState({ ...skillsModule.getState(), autoScroll });
       }, 1200);
       skillsModule.changeState({
@@ -502,7 +502,6 @@ window.addEventListener("DOMContentLoaded", () => {
       isTechnologiesStart,
       isDescriptionStart,
       skippedAnimation,
-      animationStarted,
       autoScroll,
     } = skillsModule.getState();
     const { scrollBack, scrollPosition } = globalState.getState();
@@ -546,10 +545,10 @@ window.addEventListener("DOMContentLoaded", () => {
         );
         const autoScroll = setInterval(() => {
           technologiesEl.scrollBy({
-            top: 19,
+            top: 36,
             behavior: "smooth",
           });
-        }, 90);
+        }, 50);
         skillsModule.changeState({
           ...skillsModule.getState(),
           autoScroll,
