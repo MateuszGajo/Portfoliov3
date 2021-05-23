@@ -1,11 +1,10 @@
 import { globalState } from "./globalState";
 window.addEventListener("DOMContentLoaded", () => {
+  const { windowHeight, windowWidth } = globalState.getState();
   const skillsDescriptionEl = document.querySelector(".skills__description");
   const skillsDescriptionTitleEl = document.querySelector(
     ".skills__description__title"
   );
-  const windowHeight = window.innerHeight;
-  const windowWidth = window.innerWidth;
   const skillsSection = document.querySelector(".skills");
   const SkillsDescriptionTextEl = document.querySelector(
     ".skills__description__text"
@@ -52,6 +51,8 @@ window.addEventListener("DOMContentLoaded", () => {
       isUserScroll: false,
       animationStarted: false,
       animationEnded: false,
+      skippedAnimation: false,
+      stoppedAnimation: false,
     };
     const pub = {};
 
@@ -128,7 +129,7 @@ window.addEventListener("DOMContentLoaded", () => {
       false
     );
   }
-  // disableScroll();
+  disableScroll();
 
   function enableScroll() {
     skillsSection.removeEventListener("DOMMouseScroll", preventDefault, false);
@@ -215,15 +216,25 @@ window.addEventListener("DOMContentLoaded", () => {
       techonologiesLine.classList.remove(
         "skills__technologies__line--tranistion"
       );
-      const autoScroll = setInterval(() => {
-        technologiesEl.scrollBy({
-          top: 10,
-          behavior: "smooth",
+      const { scrollPosition } = globalState.getState();
+      const { skippedAnimation } = skillsModule.getState();
+      if (
+        Math.abs(scrollPosition - technologiesStart) < 10 &&
+        !skippedAnimation
+      ) {
+        const autoScroll = setInterval(() => {
+          technologiesEl.scrollBy({
+            top: 36,
+            behavior: "smooth",
+          });
+        }, 50);
+        skillsModule.changeState({
+          ...skillsModule.getState(),
+          autoScroll,
         });
-      }, 80);
+      }
       skillsModule.changeState({
         ...skillsModule.getState(),
-        autoScroll,
         animationStarted: true,
       });
     }, 2600 + delay);
@@ -231,7 +242,8 @@ window.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       enableScroll();
       const { scrollPosition } = globalState.getState();
-      if (scrollPosition === technologiesStart) {
+      const { skippedAnimation } = skillsModule.getState();
+      if (scrollPosition === technologiesStart && !skippedAnimation) {
         globalState.changeState({
           ...globalState.getState(),
           allowScroll: false,
@@ -263,6 +275,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (isUserScroll) {
       clearInterval(autoScroll);
+      skillsModule.changeState({
+        ...skillsModule.getState(),
+        autoScroll: null,
+      });
       clearTimeout(autoScrollTimeout);
     }
   };
@@ -276,9 +292,10 @@ window.addEventListener("DOMContentLoaded", () => {
     e,
     isUserScroll,
     autoScroll,
+    skippedAnimation,
   }) => {
     const { animationEnded } = skillsModule.getState();
-
+    const { windowHeight, scrollPosition } = globalState.getState();
     const lineScroll = windowHeight / 1.2 + e.target.scrollTop;
     const elementCenter =
       skillsItemsSorted[i].offsetTop + skillsItemsSorted[i].offsetHeight / 2;
@@ -304,13 +321,54 @@ window.addEventListener("DOMContentLoaded", () => {
           disableScroll();
           skillsModule.changeState({
             ...skillsModule.getState(),
+            i: 0,
+            autoScroll: null,
+            stoppedAnimation: true,
             animationEnded: true,
+            clearTimeout: null,
           });
+
           setTimeout(() => {
-            globalState.changeState({
-              ...globalState.getState(),
-              allowScroll: true,
-            });
+            if (!skippedAnimation) {
+              globalState.changeState({
+                ...globalState.getState(),
+                allowScroll: true,
+              });
+              const newScrollPosition = scrollPosition + windowHeight;
+              window.scroll({
+                top: newScrollPosition,
+                left: 0,
+                behavior: "smooth",
+              });
+              globalState.changeState({
+                ...globalState.getState(),
+                scrollPosition: newScrollPosition,
+              });
+              skillsModule.changeState({
+                ...skillsModule.getState(),
+                skippedAnimation: true,
+              });
+              setTimeout(() => {
+                technologiesEl.scrollTo(0, 0);
+                technologiesLineOverlay.style.height =
+                  windowHeight / 2 -
+                  skillsItemsSorted[0].offsetHeight / 2 +
+                  windowHeight / 3 +
+                  "px";
+                techonologiesLine.style.height = windowHeight / 1.2 + "px";
+                skillsItemsSorted.forEach((item) => {
+                  item.classList.remove(
+                    "skills__technologies__wrapper__container--active"
+                  );
+                  item.classList.remove(
+                    "skills__technologies__wrapper__container--deactive"
+                  );
+                });
+                skillsItemsSorted[0].classList.add(
+                  "skills__technologies__wrapper__container--active"
+                );
+              }, 250);
+            }
           }, 1500);
         } else technologiesLineOverlay.style.height = newScrollPosition + "px";
 
@@ -380,10 +438,10 @@ window.addEventListener("DOMContentLoaded", () => {
         );
         const autoScroll = setInterval(() => {
           technologiesEl.scrollBy({
-            top: 10,
+            top: 36,
             behavior: "smooth",
           });
-        }, 80);
+        }, 50);
         skillsModule.changeState({ ...skillsModule.getState(), autoScroll });
       }, 1200);
       skillsModule.changeState({
@@ -405,40 +463,51 @@ window.addEventListener("DOMContentLoaded", () => {
       last,
       autoScrollTimeout,
       autoScroll,
+      stoppedAnimation,
+      skippedAnimation,
     } = skillsModule.getState();
+    if (!stoppedAnimation) {
+      const scrollCenter = windowHeight / 2 + e.target.scrollTop;
+      const lastElementPosition = skillsItemsSorted[last - 1].offsetTop;
 
-    const scrollCenter = windowHeight / 2 + e.target.scrollTop;
-    const lastElementPosition = skillsItemsSorted[last - 1].offsetTop;
+      if (!skippedAnimation)
+        clearAsyncFun({
+          animation,
+          isUserScroll,
+          autoScrollTimeout,
+          autoScroll,
+        });
 
-    clearAsyncFun({ animation, isUserScroll, autoScrollTimeout, autoScroll });
+      scrollSection({
+        scrollCenter,
+        lastElementPosition,
+        i,
+        last,
+        autoScrollTimeout,
+        e,
+        isUserScroll,
+        autoScroll,
+        skippedAnimation,
+      });
 
-    scrollSection({
-      scrollCenter,
-      lastElementPosition,
-      i,
-      last,
-      autoScrollTimeout,
-      e,
-      isUserScroll,
-      autoScroll,
-    });
+      hidenLastElement({ i, scrollCenter });
 
-    hidenLastElement({ i, scrollCenter });
-
-    addInterval({ isUserScroll, scrollCenter, lastElementPosition });
+      if (!skippedAnimation)
+        addInterval({ isUserScroll, scrollCenter, lastElementPosition });
+    }
   });
 
   document.addEventListener("scroll", (e) => {
     const {
       isTechnologiesStart,
       isDescriptionStart,
-      animationStarted,
-      animationEnded,
+      skippedAnimation,
+      autoScroll,
     } = skillsModule.getState();
-    const { scrollBack } = globalState.getState();
+    const { scrollBack, scrollPosition } = globalState.getState();
 
     if (
-      window.pageYOffset === technologiesStart &&
+      Math.abs(window.pageYOffset - technologiesStart) < 10 &&
       !isTechnologiesStart &&
       scrollBack
     ) {
@@ -452,9 +521,8 @@ window.addEventListener("DOMContentLoaded", () => {
         isTechnologiesStart: true,
       });
     }
-
     if (
-      window.pageYOffset === descriptionStart &&
+      Math.abs(window.pageYOffset - descriptionStart) < 10 &&
       !isDescriptionStart &&
       scrollBack
     ) {
@@ -466,14 +534,78 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     if (
-      window.pageYOffset === technologiesStart &&
-      animationStarted &&
-      !animationEnded
+      Math.abs(window.pageYOffset - technologiesStart) < 10 &&
+      !autoScroll &&
+      skippedAnimation &&
+      scrollPosition === windowHeight
     ) {
-      globalState.changeState({
-        ...globalState.getState(),
-        allowScroll: false,
+      setTimeout(() => {
+        techonologiesLine.classList.remove(
+          "skills__technologies__line--tranistion"
+        );
+        const autoScroll = setInterval(() => {
+          technologiesEl.scrollBy({
+            top: 36,
+            behavior: "smooth",
+          });
+        }, 50);
+        skillsModule.changeState({
+          ...skillsModule.getState(),
+          autoScroll,
+        });
+      }, 200);
+
+      skillsModule.changeState({
+        ...skillsModule.getState(),
+        autoScroll: 1,
+        stoppedAnimation: false,
+        animationEnded: false,
       });
     }
   });
+
+  const wheelSkipSection = () => {
+    const { skippedAnimation, animationStarted } = skillsModule.getState();
+    if (!skippedAnimation && !animationStarted) {
+      skillsModule.changeState({
+        ...skillsModule.getState(),
+        skippedAnimation: true,
+      });
+    } else if (skippedAnimation) {
+      const { autoScroll } = skillsModule.getState();
+      clearInterval(autoScroll);
+      skillsModule.changeState({
+        ...skillsModule.getState(),
+        autoScroll: null,
+      });
+      setTimeout(() => {
+        technologiesEl.scrollTo(0, 0);
+        technologiesLineOverlay.style.height =
+          windowHeight / 2 -
+          skillsItemsSorted[0].offsetHeight / 2 +
+          windowHeight / 3 +
+          "px";
+        techonologiesLine.style.height = windowHeight / 1.2 + "px";
+        skillsItemsSorted.forEach((item) => {
+          item.classList.remove(
+            "skills__technologies__wrapper__container--active"
+          );
+          item.classList.remove(
+            "skills__technologies__wrapper__container--deactive"
+          );
+        });
+        skillsItemsSorted[0].classList.add(
+          "skills__technologies__wrapper__container--active"
+        );
+        skillsModule.changeState({
+          ...skillsModule.getState(),
+          i: 0,
+          stoppedAnimation: true,
+        });
+      }, 300);
+    }
+  };
+
+  skillsSection.addEventListener("wheel", wheelSkipSection);
+  technologiesEl.addEventListener("touchmove", wheelSkipSection);
 });

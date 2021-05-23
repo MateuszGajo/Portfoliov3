@@ -1,3 +1,5 @@
+import { globalState } from "./globalState";
+
 window.addEventListener("DOMContentLoaded", () => {
   const setAnimation = (el, type, className, time = 0) => {
     switch (type) {
@@ -15,7 +17,7 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
   };
-
+  const startSection = document.querySelector(".start");
   const contentLineEl = document.querySelector(".start__line--content");
   const downbarLineEl = document.querySelector(".start__line--downbar");
   const downbarTitleLineEl = document.querySelector(
@@ -39,62 +41,66 @@ window.addEventListener("DOMContentLoaded", () => {
     ".start__downbar__container--title"
   );
 
-  setAnimation(contentLineEl, "add", "height-max", 2400);
-  setAnimation(contentLineEl, "add", `start__line--active`, 3000);
-  setAnimation(downbarLineEl, "add", "start__line--downbar--active", 3400);
+  const sideIcons = document.querySelectorAll(".side-bar__icon");
+
+  let isIcons = false;
+
+  setAnimation(contentLineEl, "add", "height-max", 1900);
+  setAnimation(contentLineEl, "add", `start__line--active`, 2600);
+  setAnimation(downbarLineEl, "add", "start__line--downbar--active", 2700);
   setAnimation(
     downbarTitleLineEl,
     "add",
     "start__downbar__text__line--draw-active",
-    3500
+    3100
   );
-  setAnimation(downbarTitleEl, "add", "opacity-visible", 3600);
+  setAnimation(downbarTitleEl, "add", "opacity-visible", 3200);
   setAnimation(
     downbarAuthorLineEl,
     "add",
     "start__downbar__text__line--draw-active",
-    3700
+    3100
   );
-  setAnimation(downbarAuthorEl, "add", "opacity-visible", 3800);
-  setAnimation(downbarLineEl, "add", "start__line--active", 4000);
+  setAnimation(downbarAuthorEl, "add", "opacity-visible", 3400);
+  setAnimation(downbarLineEl, "add", "start__line--active", 3600); //3600
   setAnimation(
     downbarTitleLineEl,
     "add",
     "start__downbar__text__line--active",
-    4100
+    3550
   );
   setAnimation(
     downbarAuthorLineEl,
     "add",
     "start__downbar__text__line--active",
-    4300
+    3900
   );
-  setAnimation(downbarTitleOverlayEl, "add", "width-max", 4500);
-  setAnimation(downbarAuthorOverlayEl, "add", "width-max", 4700);
+  setAnimation(downbarTitleOverlayEl, "add", "width-max", 4100);
+  setAnimation(downbarAuthorOverlayEl, "add", "width-max", 4300);
   setAnimation(
     downbarAuthorLineEl,
     "remove",
     "start__downbar__text__line--draw-active",
-    5800
+    5400
   );
   setAnimation(
     downbarTitleLineEl,
     "remove",
     "start__downbar__text__line--draw-active",
-    5900
+    5500
   );
-  setAnimation(downbarLineEl, "remove", "start__line--downbar--active", 6000);
-  setAnimation(contentLineEl, "remove", "height-max", 6300);
+  setAnimation(downbarLineEl, "remove", "start__line--downbar--active", 5600);
+  setAnimation(contentLineEl, "remove", "height-max", 5900);
   downbarEls.forEach((item) => {
-    setAnimation(item, "add", "start__downbar__container--move", 7000);
+    setAnimation(item, "add", "start__downbar__container--move", 6500);
   });
-  setAnimation(downbarAuthorEl, "add", "visibility-hidden", 7000);
-  setAnimation(downbarAuthorOverlayEl, "add", "visibility-visble", 7000);
+  setAnimation(downbarAuthorEl, "add", "visibility-hidden", 6500);
+  setAnimation(downbarAuthorOverlayEl, "add", "visibility-visble", 6500);
   setAnimation(
     downbarTitleContainerEl,
     "add",
     "start__downbar__container--title--invisible",
-    7000
+    6500
   );
 
   setTimeout(() => {
@@ -103,7 +109,7 @@ window.addEventListener("DOMContentLoaded", () => {
       .forEach((item, index) => {
         shuffleText(item, index + 1);
       });
-  }, 7500);
+  }, 7000);
 
   const shuffleText = (el, time) => {
     const initialLetter = el.textContent;
@@ -114,7 +120,7 @@ window.addEventListener("DOMContentLoaded", () => {
         );
         return shuffle;
       })(),
-      10
+      1
     );
 
     setTimeout(() => {
@@ -129,7 +135,7 @@ window.addEventListener("DOMContentLoaded", () => {
           setTimeout(() => {
             children[i].classList.add("start__content_p--move-up");
             return moveLeft(children[i], i);
-          }, 2200 + i * 200);
+          }, 1000 + i * 200);
         }
 
         const moveLeft = (el, index) => {
@@ -141,17 +147,29 @@ window.addEventListener("DOMContentLoaded", () => {
               document
                 .querySelector(".start__icon")
                 .classList.add("opacity-visible");
-
-              const children = document.querySelectorAll(".side-bar__icon");
-
-              for (let i = 0; i < children.length; i++) {
-                displayIcon(children[i], i);
+              if (!isIcons) {
+                const { windowHeight, scrollPosition } = globalState.getState();
+                for (let i = 0; i < sideIcons.length; i++) {
+                  displayIcon(sideIcons[i], i);
+                }
+                setTimeout(() => {
+                  const newScrollPosition = scrollPosition + windowHeight;
+                  window.scroll({
+                    top: newScrollPosition,
+                    left: 0,
+                    behavior: "smooth",
+                  });
+                  globalState.changeState({
+                    ...globalState.getState(),
+                    scrollPosition: newScrollPosition,
+                  });
+                }, sideIcons.length * 250 + 1000);
               }
             }, 150);
           }
         };
       }
-    }, time * 250);
+    }, time * 200);
   };
 
   const displayIcon = (el, index) => {
@@ -159,4 +177,29 @@ window.addEventListener("DOMContentLoaded", () => {
       el.classList.add("side-bar__icon--intitial");
     }, index * 250);
   };
+
+  startSection.addEventListener("wheel", (e) => {
+    if (e.deltaY > 0 && !isIcons) {
+      isIcons = true;
+      for (let i = 0; i < sideIcons.length; i++) {
+        displayIcon(sideIcons[i], i);
+      }
+    }
+  });
+
+  let lastPos = 0;
+  const touchStart = (e) => {
+    lastPos = e.changedTouches[0].pageY;
+  };
+
+  const touchEnd = (e) => {
+    if (lastPos - e.changedTouches[0].pageY > 10 && !isIcons) {
+      isIcons = true;
+      for (let i = 0; i < sideIcons.length; i++) {
+        displayIcon(sideIcons[i], i);
+      }
+    }
+  };
+  startSection.addEventListener("touchstart", touchStart);
+  startSection.addEventListener("touchend", touchEnd);
 });

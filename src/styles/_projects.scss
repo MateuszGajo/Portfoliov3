@@ -1,4 +1,216 @@
 .projects {
-  width: 100vw;
+  position: relative;
   height: 100vh;
+  background-color: $secondaryBackground;
+  overflow: hidden;
+}
+
+.projects__items {
+  position: absolute;
+  bottom: -40px;
+  display: flex;
+  height: 80%;
+  width: auto;
+  transition: transform 0.1s;
+}
+
+.projects__items__info {
+  @include flex(center, center);
+  margin-left: 50px;
+  text-align: center;
+}
+
+.projects__items__info__h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  color: $primaryTextColor;
+}
+
+.projects__items__item {
+  height: 100%;
+  @include flex(center, center);
+  margin-left: 100px;
+  transition: 0.2s ease-in-out;
+  border: solid 22px transparent;
+}
+
+.projects__items__item__desktop {
+  box-sizing: content-box;
+  position: relative;
+  @include flex(center, center);
+  width: auto;
+  height: 100%;
+  border: solid grey 22px;
+  border-radius: 50px;
+  background-color: black;
+
+  &::before {
+    box-sizing: content-box;
+    position: absolute;
+    content: "";
+    display: block;
+    @extend %parent-size;
+    border-radius: 50px;
+    border: solid black 20px;
+    z-index: 3;
+    cursor: default;
+  }
+  &:hover .projects__items__item__desktop__shorts {
+    height: calc(100% + 40px);
+    visibility: visible;
+  }
+}
+
+.projects__items__item__desktop__shorts {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  z-index: 3;
+  @include flex(center, center);
+  width: 100%;
+  height: 0;
+  visibility: hidden;
+  background-color: rgba(0, 0, 0, 0.85);
+  border-radius: 50px;
+  transition: height 0.5s;
+}
+
+.projects__items__item__desktop__shorts__icons {
+  @include flex(space-around, normal);
+  width: 100%;
+}
+
+.projects__items__item__desktop__shorts__icons__a {
+  @include flex(center, center);
+  height: 70px;
+  width: 200px;
+  background-color: $primaryColor;
+  text-decoration: none;
+  color: $primaryTextColor;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  transition: 0.2s;
+
+  &:hover {
+    background-color: $primaryColorShadow;
+    font-size: 1.6rem;
+  }
+}
+
+.projects__items__item__desktop__photo {
+  display: block;
+  height: calc(100% - 40px);
+  margin-bottom: 40px;
+  object-fit: cover;
+}
+
+.projects__items__item__mobile {
+  box-sizing: content-box;
+  position: relative;
+  @include flex(center, center);
+  flex-direction: column;
+  height: 70%;
+  margin-left: 30px;
+  border: solid grey 11px;
+  border-radius: 20px;
+
+  &::before {
+    content: "";
+    box-sizing: content-box;
+    position: absolute;
+    display: block;
+    @extend %parent-size;
+    border: solid black 10px;
+    border-radius: 20px;
+  }
+
+  &:hover .projects__items__item__mobile__shorts {
+    height: 100%;
+    visibility: visible;
+  }
+}
+
+.projects__items__item__mobile__photo {
+  display: block;
+  height: calc(100% - 30px);
+  object-fit: cover;
+}
+
+.projects__items__item__mobile__shorts {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 0;
+  visibility: hidden;
+  background-color: rgba(0, 0, 0, 0.85);
+  transition: height 0.5s;
+}
+
+.projects__items__item__mobile__shorts__icons {
+  @include flex(center, center);
+  flex-direction: column;
+  width: 100%;
+}
+
+.projects__items__item__mobile__shorts__icons__a {
+  @include flex(center, center);
+  height: 50px;
+  width: 150px;
+  background-color: $primaryColor;
+  text-decoration: none;
+  color: $primaryTextColor;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  transition: 0.2s;
+
+  &:hover {
+    background-color: #b48d8d;
+    font-size: 1.6rem;
+  }
+}
+
+.projects__items__item__mobile__downbar {
+  @include flex(center, center);
+}
+
+.projects__items__item__mobile__downbar__circle {
+  width: 15px;
+  height: 15px;
+  margin: 5px 0;
+  border: solid grey 2px;
+  border-radius: 50%;
+}
+
+.projects__items__item__info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 40px;
+  margin-top: 10px;
+  width: 150px;
+}
+
+.projects__items__item__info__text-primary {
+  color: $primaryTextColor;
+  text-align: center;
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.projects__items__item__info__text-secondary {
+  text-align: center;
+  color: grey;
+  font-size: 2rem;
+}
+
+.projects__title__h1 {
+  display: inline-block;
+  white-space: nowrap;
+  color: rgba(220, 220, 220, 0.15);
+  font-size: 9rem;
+  transition: transform 0.1s;
 }

@@ -1,16 +1,11 @@
 .about {
   position: relative;
-  height: 100vh;
-  width: 100vw;
-  background-color: #222220;
+  @extend %page-size;
+  background-color: $primaryBackground;
 }
 
 .about__title {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  @include position-change(absolute, 0, 0, 0, 0);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,7 +18,7 @@
   transform: scale(0.05);
   white-space: nowrap;
   opacity: 0;
-  color: #c89d9d;
+  color: $primaryColor;
 }
 
 .about__title__text--active {
@@ -31,8 +26,7 @@
 }
 
 .about__container {
-  width: 100%;
-  height: 100%;
+  @extend %parent-size;
   display: grid;
   grid-template-areas:
     "top-left top-right"
@@ -43,9 +37,7 @@
 
 .about__container__item {
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flex(center, center);
   overflow: hidden;
 }
 
@@ -86,24 +78,211 @@
   align-items: flex-start;
 }
 
+.about__container--active .about__container__item__text {
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.97, 0.54, 0.96, 0.76);
+  animation-fill-mode: forwards;
+}
+
+.about__container--active
+  .about__container__item--top-left
+  .about__container__item__text:nth-child(1) {
+  animation-name: animTopLeftFirstWave;
+}
+
+.about__container--active
+  .about__container__item--top-left
+  .about__container__item__text:nth-child(2) {
+  animation-name: animTopLeftSecondWave;
+}
+
+.about__container--active
+  .about__container__item--top-right
+  .about__container__item__text:nth-child(1) {
+  animation-name: animTopRightFirstWave;
+  animation-delay: 2.5s;
+}
+
+.about__container--active
+  .about__container__item--top-right
+  .about__container__item__text:nth-child(2) {
+  animation-name: animTopRightSecondWave;
+  animation-delay: 2.5s;
+}
+
+.about__container--active
+  .about__container__item--bottom-left
+  .about__container__item__text:nth-child(1) {
+  animation-name: animBottomLeftFirstWave;
+  animation-delay: 3.75s;
+}
+
+.about__container--active
+  .about__container__item--bottom-left
+  .about__container__item__text:nth-child(2) {
+  animation-name: animBottomLeftSecondWave;
+  animation-delay: 3.75s;
+}
+.about__container--active
+  .about__container__item--bottom-right
+  .about__container__item__text:nth-child(1) {
+  animation-name: animBottomRightFirstWave;
+  animation-delay: 1.25s;
+}
+
+.about__container--active
+  .about__container__item--bottom-right
+  .about__container__item__text:nth-child(2) {
+  animation-name: animBottomRightSecondWave;
+  animation-delay: 1.25s;
+}
+
 .about__container__item__text {
-  display: flex;
-  align-items: flex-end;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  @include flex(normal, flex-end);
+  @include position-change(absolute, 0, 0, 0, 0);
   font-size: 3rem;
   transform: scale(0.1);
   transform-origin: 60% 60%;
   transition: transform 0.6s;
   opacity: 0;
-  color: #adaea5;
+  color: $secondaryTextColor;
 }
 
 .about__container__item--top-left .about__container__item__text:nth-child(1) {
   transform: scale(0.5);
+}
+
+@keyframes animTopLeftFirstWave {
+  0% {
+    transform: translate(0, 0) scale(0.1);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-100%, -100%) scale(2);
+  }
+  100% {
+    transform: translate(-100%, -100%) scale(2);
+  }
+}
+
+@keyframes animTopLeftSecondWave {
+  0% {
+    transform: translate(0, 0) scale(0.1);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(0, 0) scale(0.1);
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-100%, -100%) scale(2);
+  }
+}
+
+@keyframes animTopRightFirstWave {
+  0% {
+    transform: translate(0, 0) scale(0.1);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(100%, -100%) scale(2);
+  }
+  100% {
+    transform: translate(100%, -100%) scale(2);
+  }
+}
+
+@keyframes animTopRightSecondWave {
+  0% {
+    transform: translate(0, 0) scale(0.1);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(0, 0) scale(0.1);
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100%, -100%) scale(2);
+  }
+}
+
+@keyframes animBottomLeftFirstWave {
+  0% {
+    transform: translate(0, 0) scale(0.1);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-100%, 100%) scale(2);
+  }
+  100% {
+    transform: translate(-100%, 100%) scale(2);
+  }
+}
+
+@keyframes animBottomLeftSecondWave {
+  0% {
+    transform: translate(0, 0) scale(0.1);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(0, 0) scale(0.1);
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-100%, 100%) scale(2);
+  }
+}
+
+@keyframes animBottomRightFirstWave {
+  0% {
+    transform: translate(0, 0) scale(0.1);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(100%, 100%) scale(2);
+  }
+  100% {
+    transform: translate(100%, 100%) scale(2);
+  }
+}
+
+@keyframes animBottomRightSecondWave {
+  0% {
+    transform: translate(0, 0) scale(0.1);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(0, 0) scale(0.1);
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100%, 100%) scale(2);
+  }
 }
 
 @media (max-width: 1023px) and (orientation: portrait) {

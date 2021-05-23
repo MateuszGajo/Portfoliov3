@@ -1,5 +1,5 @@
 .side-bar {
-  display: flex;
+  @include flex(center, center);
   flex-direction: column;
   position: fixed;
   top: 50%;
@@ -8,8 +8,24 @@
   z-index: 10;
 }
 
+.language-button {
+  position: fixed;
+  top: 0.5rem;
+  right: 0.5rem;
+  height: 2rem;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.language-button__image {
+  display: flex;
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+}
+
 .side-bar__icon {
-  color: rgb(200, 157, 157);
+  color: $primaryColor;
   font-size: 3rem;
   cursor: pointer;
   transition: transform 0.75s;
