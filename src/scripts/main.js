@@ -1,6 +1,6 @@
 import "./scroll";
-import "./start";
-import "./skills";
+import "./start/start";
+import "./skills/skills";
 import "./about";
 import "./projects";
 import "./languageProvider";
