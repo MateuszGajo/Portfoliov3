@@ -90,7 +90,6 @@ const checkScrollDirection = (e) => {
     if (!wheelDelta) {
       wheelDelta = -e.deltaY;
     }
-    console.log(wheelDelta);
     if (wheelDelta > 0) {
       scrollUp();
     } else {

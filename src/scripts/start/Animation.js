@@ -26,17 +26,13 @@ export default class Animation {
 
   shuffleText(selector, time, delay) {
     setTimeout(() => {
-      console.log(this);
-      console.log(this.shuffleTextAnimation);
       this.shuffleTextAnimation(selector, time);
     }, delay);
   }
 
   shuffleTextAnimation(selector, time) {
-    console.log(selector);
     const el = document.querySelector(selector);
 
-    console.log(el);
     const initialLetter = el.textContent;
     const interval = setInterval(
       (function shuffle() {
@@ -121,7 +117,6 @@ export default class Animation {
     this.wheel = (e) => {
       const sideIcons = document.querySelectorAll(".side-bar__icon");
       if (e.deltaY > 0 && !this.isIcons) {
-        console.log("set");
         this.isIcons = true;
         for (let i = 0; i < sideIcons.length; i++) {
           this.displayIcon(sideIcons[i], i);

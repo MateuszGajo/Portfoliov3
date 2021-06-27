@@ -1,4 +1,3 @@
-import { globalState } from "../globalState";
 import observers from "./startIntialization";
 import Animation from "./Animation";
 
@@ -20,7 +19,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     runAction(item) {
-      console.log(item);
       switch (item.action) {
         case "setAnimation":
           return this.animation.toggleClass(

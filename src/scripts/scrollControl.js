@@ -1,4 +1,4 @@
-export class ControlScroll {
+export default class ControlScroll {
   constructor(section) {
     this.keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
     this.supportsPassive = false;
@@ -42,12 +42,12 @@ export class ControlScroll {
     const wheelEvent =
       "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
 
-    this.section.addEventListener("DOMMouseScroll", preventDefault, false); // older FF
-    this.section.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
-    this.section.addEventListener("touchmove", preventDefault, wheelOpt); // mobile
+    this.section.addEventListener("DOMMouseScroll", this.preventDefault, false); // older FF
+    this.section.addEventListener(wheelEvent, this.preventDefault, wheelOpt); // modern desktop
+    this.section.addEventListener("touchmove", this.preventDefault, wheelOpt); // mobile
     this.section.addEventListener(
       "keydown",
-      preventDefaultForScrollKeys,
+      this.preventDefaultForScrollKeys,
       false
     );
   }
