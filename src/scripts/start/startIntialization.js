@@ -133,6 +133,7 @@ const observers = [
     delay: 6500,
   },
 ];
+
 document
   .querySelectorAll(".start__downbar__container")
   .forEach((item, index) => {

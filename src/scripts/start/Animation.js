@@ -51,46 +51,59 @@ export default class Animation {
         document
           .querySelector(".start__downbar__container--author")
           .classList.add("start__downbar__container--move-away");
+
         const children = document.querySelectorAll(".start__content__p");
+
         for (let i = 0; i < children.length; i++) {
-          setTimeout(() => {
-            children[i].classList.add("start__content_p--move-up");
-            return this.moveLeft(children[i], i);
-          }, 1000 + i * 200);
+          setTimeout(this.titleAnimation(children, i), 1000 + i * 200);
         }
       }
     }, time * 200);
+  }
+
+  titleAnimation(children, i) {
+    children[i].classList.add("start__content_p--move-up");
+    return this.moveLeft(children[i], i);
   }
 
   moveLeft(el, index) {
     setTimeout(() => {
       el.classList.add("start__content_p--mov-left");
     }, 100);
-    if (index === 2) {
-      const sideIcons = document.querySelectorAll(".side-bar__icon");
-      setTimeout(() => {
-        document.querySelector(".start__icon").classList.add("opacity-visible");
-        if (!this.isIcons) {
-          this.isIcons = true;
-          const { windowHeight, scrollPosition } = globalState.getState();
-          for (let i = 0; i < sideIcons.length; i++) {
-            this.displayIcon(sideIcons[i], i);
-          }
-          setTimeout(() => {
-            const newScrollPosition = scrollPosition + windowHeight;
-            window.scroll({
-              top: newScrollPosition,
-              left: 0,
-              behavior: "smooth",
-            });
-            globalState.changeState({
-              ...globalState.getState(),
-              scrollPosition: newScrollPosition,
-            });
-          }, sideIcons.length * 250 + 1000);
-        }
-      }, 150);
+
+    if (index === 2)
+      setTimeout(this.displayIconAfterAnimations.bind(this), 150);
+  }
+
+  displayIconAfterAnimations() {
+    const sideIcons = document.querySelectorAll(".side-bar__icon");
+
+    document.querySelector(".start__icon").classList.add("opacity-visible");
+    if (!this.isIcons) {
+      this.isIcons = true;
+
+      for (let i = 0; i < sideIcons.length; i++) {
+        this.displayIcon(sideIcons[i], i);
+      }
+
+      setTimeout(this.scrollNextSection, sideIcons.length * 250 + 1000);
     }
+  }
+
+  scrollNextSection() {
+    const { windowHeight, scrollPosition } = globalState.getState();
+    const newScrollPosition = scrollPosition + windowHeight;
+
+    window.scroll({
+      top: newScrollPosition,
+      left: 0,
+      behavior: "smooth",
+    });
+
+    globalState.changeState({
+      ...globalState.getState(),
+      scrollPosition: newScrollPosition,
+    });
   }
 
   displayIcon(el, index) {
@@ -99,33 +112,36 @@ export default class Animation {
     }, index * 250);
   }
 
+  wheel(e) {
+    const sideIcons = document.querySelectorAll(".side-bar__icon");
+    if (e.deltaY > 0 && !this.isIcons) {
+      this.isIcons = true;
+      for (let i = 0; i < sideIcons.length; i++) {
+        this.displayIcon(sideIcons[i], i);
+      }
+    }
+  }
+
+  touchEnd() {
+    const sideIcons = document.querySelectorAll(".side-bar__icon");
+    if (lastPos - e.changedTouches[0].pageY > 10 && !this.isIcons) {
+      this.isIcons = true;
+      for (let i = 0; i < sideIcons.length; i++) {
+        this.displayIcon(sideIcons[i], i);
+      }
+    }
+  }
+
+  touchStart(e) {
+    this.lastPos = e.changedTouches[0].pageY;
+  }
+
   addListeners() {
-    this.touchStart = (e) => {
-      this.lastPos = e.changedTouches[0].pageY;
-    };
-
-    this.touchEnd = () => {
-      const sideIcons = document.querySelectorAll(".side-bar__icon");
-      if (lastPos - e.changedTouches[0].pageY > 10 && !this.isIcons) {
-        this.isIcons = true;
-        for (let i = 0; i < sideIcons.length; i++) {
-          this.displayIcon(sideIcons[i], i);
-        }
-      }
-    };
-
-    this.wheel = (e) => {
-      const sideIcons = document.querySelectorAll(".side-bar__icon");
-      if (e.deltaY > 0 && !this.isIcons) {
-        this.isIcons = true;
-        for (let i = 0; i < sideIcons.length; i++) {
-          this.displayIcon(sideIcons[i], i);
-        }
-      }
-    };
-
-    this.startSection.addEventListener("touchstart", this.touchStart);
-    this.startSection.addEventListener("touchend", this.touchEnd);
-    this.startSection.addEventListener("wheel", this.wheel);
+    this.startSection.addEventListener(
+      "touchstart",
+      this.touchStart.bind(this)
+    );
+    this.startSection.addEventListener("touchend", this.touchEnd.bind(this));
+    this.startSection.addEventListener("wheel", this.wheel.bind(this));
   }
 }

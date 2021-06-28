@@ -18,10 +18,10 @@ export default class Scroll {
       const technologiesStart = this.sectionState.getTechnologiesStart();
       const skippedAnimation = this.sectionState.getSkippedAnimationStatus();
       const technologiesEl = this.sectionState.getTechnologiesEl();
-      if (
-        Math.abs(scrollPosition - technologiesStart) < 10 &&
-        !skippedAnimation
-      ) {
+
+      const isUserOnSection = Math.abs(scrollPosition - technologiesStart) < 10;
+
+      if (isUserOnSection && !skippedAnimation) {
         const autoScroll = setInterval(() => {
           technologiesEl.scrollBy({
             top: 36,
@@ -49,41 +49,45 @@ export default class Scroll {
   wheelSkipSection() {
     const skippedAnimation = this.sectionState.getSkippedAnimationStatus();
     const animationStarted = this.sectionState.getAnimationStarted();
+
+    if (!skippedAnimation && !animationStarted) {
+      this.sectionState.setSkipAnimation(true);
+    } else if (skippedAnimation) {
+      const autoScroll = this.sectionState.getAutoScrollIndex();
+
+      clearInterval(autoScroll);
+      setTimeout(this.resetAnimation.bind(this), 300);
+      this.sectionState.setAutoScroll(null);
+    }
+  }
+
+  resetAnimation() {
+    const { windowHeight } = globalState.getState();
+
     const technologiesEl = this.sectionState.getTechnologiesEl();
     const technologiesLineOverlay =
       this.sectionState.getTechnologiesLineOverlay();
     const skillsItemsSorted = this.sectionState.skillItemsSort();
     const techonologiesLine = this.sectionState.getTechnologiesLine();
-    const { windowHeight } = globalState.getState();
-    if (!skippedAnimation && !animationStarted) {
-      this.sectionState.setSkipAnimation(true);
-    } else if (skippedAnimation) {
-      const autoScroll = this.sectionState.getAutoScrollIndex();
-      clearInterval(autoScroll);
-      this.sectionState.setAutoScroll(null);
-      setTimeout(() => {
-        technologiesEl.scrollTo(0, 0);
-        technologiesLineOverlay.style.height =
-          windowHeight / 2 -
-          skillsItemsSorted[0].offsetHeight / 2 +
-          windowHeight / 3 +
-          "px";
-        techonologiesLine.style.height = windowHeight / 1.2 + "px";
-        skillsItemsSorted.forEach((item) => {
-          item.classList.remove(
-            "skills__technologies__wrapper__container--active"
-          );
-          item.classList.remove(
-            "skills__technologies__wrapper__container--deactive"
-          );
-        });
-        skillsItemsSorted[0].classList.add(
-          "skills__technologies__wrapper__container--active"
-        );
-        this.sectionState.setIndex(0);
-        this.sectionState.setStopAnimation(true);
-      }, 300);
-    }
+
+    technologiesEl.scrollTo(0, 0);
+    technologiesLineOverlay.style.height =
+      windowHeight / 2 -
+      skillsItemsSorted[0].offsetHeight / 2 +
+      windowHeight / 3 +
+      "px";
+    techonologiesLine.style.height = windowHeight / 1.2 + "px";
+    skillsItemsSorted.forEach((item) => {
+      item.classList.remove("skills__technologies__wrapper__container--active");
+      item.classList.remove(
+        "skills__technologies__wrapper__container--deactive"
+      );
+    });
+    skillsItemsSorted[0].classList.add(
+      "skills__technologies__wrapper__container--active"
+    );
+    this.sectionState.setIndex(0);
+    this.sectionState.setStopAnimation(true);
   }
 
   listener() {
