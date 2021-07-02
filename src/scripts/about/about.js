@@ -39,30 +39,31 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    onScroll() {
+      const { scrollBack } = globalState.getState();
+      const isSectionStart = this.state.getIsSectionStart();
+      const aboutStartPosition = this.state.getAboutStartPosition();
+      const isUserOnSection =
+        Math.abs(window.pageYOffset - aboutStartPosition) < 10;
+
+      if (isUserOnSection && scrollBack && !isSectionStart) {
+        this.state.setIsSectionStart(true);
+        this.fire();
+        setTimeout(() => {
+          const skippedAnimation = this.state.getSkippedAnimation();
+          if (!skippedAnimation) {
+            const interval = setInterval(() => {
+              this.animation.scrollSection(0.4);
+            }, 100);
+            this.state.setInterval(interval);
+          }
+        }, 800);
+      }
+    }
+
     listener() {
       this.scroll.listener();
-      document.addEventListener("scroll", () => {
-        const { scrollBack } = globalState.getState();
-        const isSectionStart = this.state.getIsSectionStart();
-        const aboutStartPosition = this.state.getAboutStartPosition();
-        if (
-          Math.abs(window.pageYOffset - aboutStartPosition) < 10 &&
-          scrollBack &&
-          !isSectionStart
-        ) {
-          this.state.setIsSectionStart(true);
-          this.fire();
-          setTimeout(() => {
-            const skippedAnimation = this.state.getSkippedAnimation();
-            if (!skippedAnimation) {
-              const interval = setInterval(() => {
-                this.animation.scrollSection(0.4);
-              }, 100);
-              this.state.setInterval(interval);
-            }
-          }, 800);
-        }
-      });
+      document.addEventListener("scroll", this.onScroll.bind(this));
     }
   }
 

@@ -5,68 +5,110 @@ export default class Animation {
     this.parent = parent;
     this.state = new State();
   }
-  moveProjects(direction, distance) {
+
+  previousSection() {
+    const title = this.state.getTitle();
+    const items = this.state.getItems();
+
+    const { windowHeight, scrollPosition } = globalState.getState();
+    const projectsSection = this.state.getProjectsSection();
+    const projectsSectionDistance = projectsSection.offsetTop;
+
+    const isUserOnStartSection = projectsSectionDistance === scrollPosition;
+    if (isUserOnStartSection) {
+      title.style.transform = `translateX(0)`;
+      items.style.transform = `translateX(0)`;
+
+      setTimeout(() => {
+        globalState.changeState({
+          ...globalState.getState(),
+          allowScroll: true,
+        });
+      }, 500);
+      this.state.setIsScrollOn(true);
+
+      const newScrollPosition = scrollPosition - windowHeight;
+      window.scroll({
+        top: newScrollPosition,
+        left: 0,
+        behavior: "smooth",
+      });
+      globalState.changeState({
+        ...globalState.getState(),
+        scrollPosition: newScrollPosition,
+      });
+      this.parent.setScrollProjectOff("off");
+    }
+  }
+
+  moveLeft({ distance }) {
+    const transformProjectsPosition = this.state.getTransformProjectsPositon();
+    const transformTitlePosition = this.state.getTransformTitlePosition();
+    const title = this.state.getTitle();
+    const items = this.state.getItems();
+
+    let newTransformProjectsPosition = 0;
+    let newTransformTitlePosition = 0;
+
+    const isScrollLeftPossible = transformProjectsPosition + distance < -50;
+
+    if (isScrollLeftPossible) {
+      newTransformTitlePosition = transformTitlePosition + distance / 2;
+      newTransformProjectsPosition = transformProjectsPosition + distance;
+
+      title.style.transform = `translateX(${newTransformTitlePosition}px)`;
+      items.style.transform = `translateX(${newTransformProjectsPosition}px)`;
+    } else {
+      this.previousSection();
+    }
+
+    this.state.setTransformProjectsPosition(newTransformProjectsPosition);
+    this.state.setTransformTitlePosition(newTransformTitlePosition);
+  }
+
+  moveRight({ distance }) {
     const transformProjectsPosition = this.state.getTransformProjectsPositon();
     const transformTitlePosition = this.state.getTransformTitlePosition();
     const itemsWidth = this.state.getItemsWidth();
     const windowWidth = this.state.getWindowWidth();
     const title = this.state.getTitle();
     const items = this.state.getItems();
-    const item = this.state.getItem();
 
-    let newTransformProjectsPosition;
-    let newTransformTitlePosition;
+    let newTransformProjectsPosition = 0;
+    let newTransformTitlePosition = 0;
 
     const sizeOutOfScreen = itemsWidth - windowWidth + 100;
 
-    if (direction === "left") {
-      if (transformProjectsPosition + distance < -50) {
-        newTransformTitlePosition = transformTitlePosition + distance / 2;
-        newTransformProjectsPosition = transformProjectsPosition + distance;
+    const isNotEndOfSection =
+      (transformProjectsPosition - distance) * -1 < sizeOutOfScreen;
 
-        title.style.transform = `translateX(${newTransformTitlePosition}px)`;
-        items.style.transform = `translateX(${newTransformProjectsPosition}px)`;
-      } else {
-        const { windowHeight, scrollPosition } = globalState.getState();
-        title.style.transform = `translateX(0)`;
-        items.style.transform = `translateX(0)`;
-
-        newTransformTitlePosition = 0;
-        newTransformProjectsPosition = 0;
-        setTimeout(() => {
-          globalState.changeState({
-            ...globalState.getState(),
-            allowScroll: true,
-          });
-        }, 500);
-        this.state.setIsScrollOn(true);
-
-        const newScrollPosition = scrollPosition - windowHeight;
-        window.scroll({
-          top: newScrollPosition,
-          left: 0,
-          behavior: "smooth",
-        });
-        globalState.changeState({
-          ...globalState.getState(),
-          scrollPosition: newScrollPosition,
-        });
-        this.parent.setScrollProjectOff("off");
-      }
-    } else if (direction === "right") {
-      if ((transformProjectsPosition - distance) * -1 < sizeOutOfScreen) {
-        newTransformTitlePosition = transformTitlePosition - distance / 2;
-        newTransformProjectsPosition = transformProjectsPosition - distance;
-        title.style.transform = `translateX(${newTransformTitlePosition}px)`;
-        items.style.transform = `translateX(${newTransformProjectsPosition}px)`;
-      } else {
-        newTransformTitlePosition = transformTitlePosition;
-        newTransformProjectsPosition = -sizeOutOfScreen;
-      }
+    if (isNotEndOfSection) {
+      newTransformTitlePosition = transformTitlePosition - distance / 2;
+      newTransformProjectsPosition = transformProjectsPosition - distance;
+      title.style.transform = `translateX(${newTransformTitlePosition}px)`;
+      items.style.transform = `translateX(${newTransformProjectsPosition}px)`;
+    } else {
+      newTransformTitlePosition = transformTitlePosition;
+      newTransformProjectsPosition = -sizeOutOfScreen;
     }
     this.state.setTransformProjectsPosition(newTransformProjectsPosition);
     this.state.setTransformTitlePosition(newTransformTitlePosition);
+  }
 
+  moveProjects(direction, distance) {
+    switch (direction) {
+      case "left":
+        this.moveLeft({ distance });
+        break;
+      case "right":
+        this.moveRight({ distance });
+        break;
+    }
+    this.itemEnlargment();
+  }
+
+  itemEnlargment() {
+    const item = this.state.getItem();
     item.forEach((item) => {
       item.style.transform = "scale(0.990)";
       setTimeout(() => {

@@ -30,36 +30,47 @@ export default class Scroll {
     }
   }
 
-  scrollProject(action) {
+  addProjectsScrolling() {
     const projectsSection = this.state.getProjectsSection();
-    if (action === "on") {
-      projectsSection.addEventListener(
-        "wheel",
-        this.handleWheelEvent.bind(this)
-      );
-      projectsSection.addEventListener(
-        "touchstart",
-        this.handleTouchStartEvent.bind(this)
-      );
-      projectsSection.addEventListener(
-        "touchend",
-        this.handleTouchEndEvent.bind(this)
-      );
-      this.state.setIsScrollOn(true);
-    } else if (action === "off") {
-      projectsSection.removeEventListener(
-        "wheel",
-        this.handleWheelEvent.bind(this)
-      );
-      projectsSection.removeEventListener(
-        "touchstart",
-        this.handleTouchStartEvent.bind(this)
-      );
-      projectsSection.removeEventListener(
-        "touchend",
-        this.handleTouchEndEvent.bind(this)
-      );
-      this.state.setIsScrollOn(true);
+
+    projectsSection.addEventListener("wheel", this.handleWheelEvent.bind(this));
+    projectsSection.addEventListener(
+      "touchstart",
+      this.handleTouchStartEvent.bind(this)
+    );
+    projectsSection.addEventListener(
+      "touchend",
+      this.handleTouchEndEvent.bind(this)
+    );
+    this.state.setIsScrollOn(true);
+  }
+
+  removeProjectsScrolling() {
+    const projectsSection = this.state.getProjectsSection();
+
+    projectsSection.removeEventListener(
+      "wheel",
+      this.handleWheelEvent.bind(this)
+    );
+    projectsSection.removeEventListener(
+      "touchstart",
+      this.handleTouchStartEvent.bind(this)
+    );
+    projectsSection.removeEventListener(
+      "touchend",
+      this.handleTouchEndEvent.bind(this)
+    );
+    this.state.setIsScrollOn(true);
+  }
+
+  scrollProject(action) {
+    switch (action) {
+      case "on":
+        this.addProjectsScrolling();
+        break;
+      case "off":
+        this.removeProjectsScrolling();
+        break;
     }
   }
 
@@ -69,20 +80,24 @@ export default class Scroll {
       const projectsSectionPosition = this.state.getProjectsSectionPosition();
 
       const { scrollPosition } = globalState.getState();
-      if (
-        isScrollOn &&
+
+      const isUserOnSection =
         Math.abs(window.pageYOffset - projectsSectionPosition) < 10 &&
-        Math.abs(scrollPosition - projectsSectionPosition) < 10
-      ) {
+        Math.abs(scrollPosition - projectsSectionPosition) < 10;
+
+      if (isScrollOn && isUserOnSection) {
         this.animation.moveProjects("right", 30);
+
         globalState.changeState({
           ...globalState.getState(),
           allowScroll: false,
         });
-        this.scrollProject("on");
         this.state.setIsScrollOn(false);
+
+        this.scrollProject("on");
       }
     });
+
     const projectsSection = this.state.getProjectsSection();
     projectsSection.addEventListener(
       "touchmove",

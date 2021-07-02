@@ -85,6 +85,7 @@ const scrollUp = () => {
 
 const checkScrollDirection = (e) => {
   const { allowScroll } = globalState.getState();
+  console.log(allowScroll);
   if (allowScroll) {
     let wheelDelta = e.wheelDelta;
     if (!wheelDelta) {

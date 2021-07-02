@@ -55,7 +55,7 @@ export default class Animation {
         const children = document.querySelectorAll(".start__content__p");
 
         for (let i = 0; i < children.length; i++) {
-          setTimeout(this.titleAnimation(children, i), 1000 + i * 200);
+          setTimeout(() => this.titleAnimation(children, i), 1000 + i * 200);
         }
       }
     }, time * 200);
